@@ -15,4 +15,4 @@ public ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 }
 ```
 
-Note that in this solution, the iterating condition is `l1 == nullptr` rather than `l1->next == nullptr`, in which case when `l1` hits the end and becomes `nullptr` the loop gets stuck.
+**Note that in this solution, the iterating condition is `l1 == nullptr` rather than `l1->next == nullptr`, in which case when `l1` hits the end and becomes `nullptr` the loop gets stuck.**
