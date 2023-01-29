@@ -107,3 +107,244 @@ public:
 };
 ```
 
+### 24. Swap Nodes in Pairs (Medium)
+
+#### ***Sol1: Recursion***
+
+> Three considerations when using a recursive structure:
+>
+> 1.  terminating condition (the exit)? 
+> 2. what should current level of recursion return to its prior level?
+> 3. what should be implemented in this level of recursion?
+
+```C++
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        // exit: a nullptr or the tail
+        if(!head || !head->next) return head;
+        ListNode* q = head->next;
+        // return a modified list to the prior level (for its node to point to as next)
+        // we switch the two nodes (current node and the next one) on this level of recursion. Note that the current node should point to the modified list.
+        head->next = swapPairs(q->next);
+        q->next = head;
+        return q;
+    }
+};
+```
+
+#### *Sol2: Iteration*
+
+In this non-recursive solution, 3 pointers (temp, node1, node2 respectively) are used and a dummy head is added. The interaction between these pointers can get confusing:
+
+The node pointed by temp does not get switched. Rather, temp is meant to keep track of the preceding node of node1. After each iteration, **temp is renewed to point at node 1**, after which **node 1 and node 2 progress to the right of temp**. **Initially temp points at the dummy head**.
+
+```C++
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* temp = dummyHead;
+        while (temp->next != nullptr && temp->next->next != nullptr) {
+            ListNode* node1 = temp->next;
+            ListNode* node2 = temp->next->next;
+            temp->next = node2;
+            node1->next = node2->next;
+            node2->next = node1;
+            temp = node1;
+        }
+        return dummyHead->next;
+    }
+};
+```
+
+### 445. Add Two Numbers II (Medium)
+
+#### ***Sol1: Reverse the list with recursion***
+
+```C++
+class Solution {
+public:
+    ListNode* flip(ListNode* h){
+        if(!h || !h->next) return h;
+        ListNode* p = h->next;
+        ListNode* tmp = flip(p);
+        p->next = h;
+        h->next = nullptr;  // KEY! without this the list would be messed up.
+        return tmp;
+    }
+  
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* h1 = flip(l1), *h2 = flip(l2);
+        ListNode* p1 = h1, *p2 = h2;
+        int new_val, digit, carry = 0;
+        ListNode* dummy = new ListNode(0);
+        ListNode* p = dummy;
+        while(p1 && p2){
+            new_val = p1->val + p2->val + carry;
+            digit = new_val%10; 
+            carry = new_val/10;
+            ListNode* tmp = new ListNode(digit);
+            p->next = tmp;
+            p = p->next;
+
+            p1 = p1->next;
+            p2 = p2->next;
+        }
+        while(p1){ // handle remaining p1
+            new_val = p1->val + carry;
+            digit = new_val%10;
+            carry = new_val/10;
+            ListNode* tmp = new ListNode(digit);
+
+            p->next = tmp;
+            p = p->next;
+            p1 = p1->next;            
+        }
+        while(p2){ 
+            new_val = p2->val + carry;
+            digit = new_val%10;
+            carry = new_val/10;
+            ListNode* tmp = new ListNode(digit);
+
+            p->next = tmp;
+            p = p->next;
+            p2 = p2->next;
+        }
+        // Do not forget to handle one last possible carry
+        if(carry){
+            ListNode* tmp = new ListNode(carry);
+            p->next = tmp;
+        }
+        ListNode* res = dummy->next;
+        delete dummy;
+        return flip(res);
+    }
+};
+```
+
+This solution should be very straightforward structurally, but there are two key points that can be of future reference:
+
+- always remember to set the tail of a linked list to be nullptr.
+- when handling bitwise addition, remember to add the last carry bit that often gets omitted in the loop
+
+However, it should be intuitive to **use stack when handling reverse-order operation**, as shown in the following code:
+
+#### *Sol2: Stack*
+
+```c++
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        stack<int> s1, s2;
+        while (l1) {
+            s1.push(l1 -> val);
+            l1 = l1 -> next;
+        }
+        while (l2) {
+            s2.push(l2 -> val);
+            l2 = l2 -> next;
+        }
+        int carry = 0;
+        ListNode* ans = nullptr;
+        while (!s1.empty() or !s2.empty() or carry != 0) {
+            int a = s1.empty() ? 0 : s1.top();
+            int b = s2.empty() ? 0 : s2.top();
+            if (!s1.empty()) s1.pop();
+            if (!s2.empty()) s2.pop();
+            int cur = a + b + carry;
+            carry = cur / 10;
+            cur %= 10;
+            auto curnode = new ListNode(cur);
+            curnode -> next = ans;
+            ans = curnode;
+        }
+        return ans;
+    }
+};
+```
+
+Note that the order of the original list remains intact.
+
+### 234. Palindrome Linked List (Easy)
+
+#### *Sol1: Stack* 
+
+Following the solutions of [Prob 445](https://leetcode.com/problems/add-two-numbers-ii/), [Prob 24](https://leetcode.com/problems/swap-nodes-in-pairs/), stack is our top consideration when handling this:
+
+```C++
+#include<stack>
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        stack<ListNode*> st;
+        ListNode* p = head, *q;
+        while(p){
+            st.push(p);
+            p = p->next;
+        }
+        p = head;
+        while(!st.empty()){
+            q = st.top(); st.pop();
+            if(p->val != q->val) return false;
+            p = p->next;
+        }
+        return true;
+    }
+};
+```
+
+However, using stack here can be rather space-consuming. We may improve this by only comparing half of the nodes, but another way to tackle it is a combination of crucial tricks required for handling linked lists.
+
+#### *Sol2: find_middle, reverse, and check*
+
+We divide the designated task into several subtasks:
+
+1. cutting the list in half  (by locating the middle node)
+
+2. reversing the latter half
+
+3. checking the pairs 
+
+We use double pointers to find the middle node and recursion to reverse the list.
+
+```C++
+bool isPalindrome(ListNode* head) {
+    ListNode* fast = head, *slow = head;
+    //find middle node
+    while (fast != null && fast.next != null) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    // if fast is not null, then there are odd number of nodes
+    if (fast != null) {
+        slow = slow->next;
+    }
+    // reverse latter half
+    slow = reverse(slow);
+
+    fast = head;
+    while (slow != null) {
+        if (fast->val != slow->val)
+            return false;
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return true;
+}
+
+// reverse
+ListNode* reverse(ListNode* head) {
+    ListNode* prev = null;
+    while (head != null) {
+        ListNode next = head->next;
+        head->next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+}
+```
+
+**A key takeaway is the method to locate the middle node in here. If `fast` is non-null, then point `slow` to the next node, which is exactly the middle node**.
