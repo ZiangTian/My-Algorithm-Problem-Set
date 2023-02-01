@@ -348,3 +348,51 @@ ListNode* reverse(ListNode* head) {
 ```
 
 **A key takeaway is the method to locate the middle node in here. If `fast` is non-null, then point `slow` to the next node, which is exactly the middle node**.
+
+### 725. Split Linked List in Parts(Medium)
+
+I got into a bit of trouble in this one. 
+$$
+quo = \frac{len}{k}, 
+rem = len\mod{k}
+$$
+We divide the nodes into `k` groups, each containing  `quo` nodes with `rem` ones yet to be grouped. Assign the first `rem` groups with one extra node from the ungrouped.
+
+However, what got me was the loops. I went so far as to write three nested loops, which really made it all complicated. 
+
+```C++
+class Solution {
+public:
+
+    vector<ListNode*> splitListToParts(ListNode* head, int k) {
+        int len = 0;
+        ListNode*p = head;
+        while(p){
+            p = p->next;
+            len++;
+        }
+        int avg = len/k;
+        int rem = len%k;
+
+        vector<ListNode*> parts(k,nullptr); // key! setting possible null pointers in advance
+        ListNode* itr = head;
+        for(int i=0; i<k && itr; i++){
+            parts[i] = itr;
+            int partSize = avg + (i<rem); // for the first rem groups, partSize is greater
+            for(int j= 1; j< partSize; j++){
+                itr = itr->next;
+            }
+            p = itr->next;
+            itr->next = nullptr;
+            itr = p;
+        }
+
+        return parts;
+        
+    }
+};
+```
+
+Actually only 2 loops are needed: one for the outer iteration to fill all the non-null groups (now that the potential null nodes at the tail, if any, have been handled), and another for the iteration within the group. In fact, the second loop can be simply viewed as a pattern to skip a certain number of nodes, so there is really a single loop here.
+
+> key takeway: learn to view loops from a different perspective.
