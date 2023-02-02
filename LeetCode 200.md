@@ -353,10 +353,10 @@ ListNode* reverse(ListNode* head) {
 
 I got into a bit of trouble in this one. 
 $$
-quo = \frac{len}{k}, 
+avg = \frac{len}{k}, 
 rem = len\mod{k}
 $$
-We divide the nodes into `k` groups, each containing  `quo` nodes with `rem` ones yet to be grouped. Assign the first `rem` groups with one extra node from the ungrouped.
+**We divide the nodes into `k` groups, each containing  `avg` nodes with `rem` ones yet to be grouped. Assign the first `rem` groups with one extra node from the ungrouped.**
 
 However, what got me was the loops. I went so far as to write three nested loops, which really made it all complicated. 
 
@@ -396,3 +396,58 @@ public:
 Actually only 2 loops are needed: one for the outer iteration to fill all the non-null groups (now that the potential null nodes at the tail, if any, have been handled), and another for the iteration within the group. In fact, the second loop can be simply viewed as a pattern to skip a certain number of nodes, so there is really a single loop here.
 
 > key takeway: learn to view loops from a different perspective.
+
+### 104. Maximum Depth of Binary Tree (Easy)
+
+#### *Sol1: BFS*
+
+This code offers important insights on calculating the exact number of nodes on a level:
+
+```c++
+class Solution {
+public:
+
+    int maxDepth(TreeNode* root) {
+        // BFS
+        if(!root) return 0;
+        TreeNode* p = root;
+        queue<TreeNode*> qu;
+        qu.push(p);
+        int lev = 0;
+        while(!qu.empty()){
+            int curLev = qu.size();
+            while(curLev>0){
+                p = qu.front(); qu.pop();
+                if(p->left) qu.push(p->left); 
+                if(p->right)qu.push(p->right);
+                curLev--; // number of nodes on current level
+            }
+            lev++;
+        }
+        return lev;
+    }
+};
+```
+
+In the code, every initial value of `curLev` is the number of nodes on current level.
+
+#### *Sol2: DFS*
+
+This should be more intuitive:
+
+```c++
+class Solution {
+public:
+
+    int maxDepth(TreeNode* root) {
+        if (!root)return 0;
+        else {
+            int maxDepth1 = 1 + maxDepth(root->left);
+            int maxDepth2 = 1 + maxDepth(root->right);
+            return maxDepth1>maxDepth2 ? maxDepth1 : maxDepth2;
+        }
+    }
+};
+```
+
+Note that by calling `maxDepth`, we are diving deeper into the tree, hence the increment of `maxDepth`.
