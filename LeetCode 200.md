@@ -1,5 +1,7 @@
 # LeetCode 200
 
+[TOC]
+
 ## Data Structure
 
 ### 160  Intersection of Two Linked Lists (Easy)
@@ -451,3 +453,80 @@ public:
 ```
 
 Note that by calling `maxDepth`, we are diving deeper into the tree, hence the increment of `maxDepth`.
+
+### 110. Balanced Binary Tree (Easy)
+
+My solution at first shot. For those "attribute-judging" problems, usually:
+
+- determine the conditions for the attributes: is it a `&&` between all conditions or `||` ?
+- the leftchild and (or) rightchild must satisfy such a condition in some way, and the relationship in between them must satisfy the attribute.
+
+```C++
+class Solution {
+public:
+    int getDep(TreeNode* r){
+        if(!r) return 0;
+        return max(getDep(r->left), getDep(r->right))+1;
+    }
+    bool okay(int a, int b){
+        return (b-1 <= a && a <= b+1) ? true : false;
+    }
+    bool isBalanced(TreeNode* root) {
+        if(!root) return true;
+        return isBalanced(root->left) && isBalanced(root->right) && okay(getDep(root->left), getDep(root->right));
+    }
+};
+```
+
+However, it's obvious that this solution has gone to extra lengths as to calculate the depth of every node. To avoid this, consider *postorder traversal*: 
+
+```C++
+class Solution {
+public:
+    int height(TreeNode* root) {
+        if (root == NULL) {
+            return 0;
+        }
+        int leftHeight = height(root->left);
+        int rightHeight = height(root->right);
+        if (leftHeight == -1 || rightHeight == -1 || abs(leftHeight - rightHeight) > 1)          return -1;
+            else {
+            return max(leftHeight, rightHeight) + 1;
+        }
+    }
+
+    bool isBalanced(TreeNode* root) {
+        return height(root) >= 0;
+    }
+};
+```
+
+### 543. Diameter of Binary Tree (Easy)
+
+Things were pretty smooth with this one. After quite some analysis, the process got more straightforward:
+
+- For any pair of nodes in a tree, there is and only is a single path between them.
+- The longest path in a tree may or may not contain the ROOT, but **can always be found *diverging* from a certain "root"**. "Diverging" includes the case where a path spans directly from the root to the node.
+- Therefore, for all nodes, there exists a regionally longest path that contains it. The length of this path is the sum of the **depths** of its child nodes.
+
+```C++
+class Solution {
+public:
+    int getDep(TreeNode* r){
+        if(!r) return 0;
+        return max(getDep(r->left), getDep(r->right))+1;
+    }
+    int diameterOfBinaryTree(TreeNode* root) {
+        // exit
+        if(!root) return 0;  
+        // longest path running through current node
+        int curDia = getDep(root->left) + getDep(root->right); 
+        // longest path running through left child
+        int leftDia = diameterOfBinaryTree(root->left); 
+        // longest path running through right child
+        int rightDia = diameterOfBinaryTree(root->right); 
+        return max(curDia, max(leftDia, rightDia)); //must be among the three of them
+    }
+};
+```
+
