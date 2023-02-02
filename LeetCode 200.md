@@ -507,7 +507,7 @@ Things were pretty smooth with this one. After quite some analysis, the process 
 
 - For any pair of nodes in a tree, there is and only is a single path between them.
 - The longest path in a tree may or may not contain the ROOT, but **can always be found *diverging* from a certain "root"**. "Diverging" includes the case where a path spans directly from the root to the node.
-- Therefore, for all nodes, there exists a regionally longest path that contains it. The length of this path is the sum of the **depths** of its child nodes.
+- Therefore, for every node, there exists a regionally longest path that contains it. The length of this path is the sum of the **depths** of its child nodes.
 
 ```C++
 class Solution {
