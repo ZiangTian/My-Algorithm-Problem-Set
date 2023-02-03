@@ -584,3 +584,103 @@ public:
 };
 ```
 
+> Note that we created a new, independent tree here rather than one with borrowed nodes from the previous trees.
+
+### 112. Path Sum (Easy)
+
+Again, I hit a rough patch with this one. I attempted to iterate all over the tree and find all paths from the root to the leaves with the following code (which worked out fine but got into a vague definition problem over whether the root node counts as a leaf node). It utilizes the property of the vector that automatically retires to its prior state in a recursion:
+
+```C++
+#include<vector>
+using namespace std;
+class Solution {
+public:
+    bool flag;
+    vector<vector<int>> paths;
+    void go2leaf(TreeNode* r, vector<int> path){
+        // automatic retirement of path
+        if(!r){
+            // at the root
+            if(path.size()>1) paths.push_back(path); // attempts to rule out the case where the root node counts as leaf node
+            return;
+        }
+        else{
+            path.push_back(r->val);
+            go2leaf(r->left, path);
+            go2leaf(r->right, path);
+        }
+    }
+    int getSum(vector<int>& v){
+        int i, len = v.size(), sum = 0;
+        for(i = 0; i< len;  i++) sum += v[i];
+        return sum;
+    }
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(!root) return false; 
+        if(!root->left && !root->right) return root->val == targetSum;
+
+        vector<int> path;
+        go2leaf(root, path);  // find all paths that leads to all leaves. 
+
+        int numOfleaf = paths.size();
+        for(int i = 0; i<numOfleaf; i++)
+            if(getSum(paths[i]) == targetSum) return true;
+        return false;
+    }
+};
+```
+
+Anyways, it got trickier and trickier before I finally quit. (Though it did inspire me to figure out a way to find all the root-to-leaf paths).
+
+#### *Sol1: Recursion*
+
+Always treat the tree on a certain level of recursion as a node with two children, both of which are like an unknown cloud.
+
+```C++
+bool hasPathSum(TreeNode* root, int targetSum){
+    if(!root) return false; // exit
+    // tasks within current level: 1. determine whether has matched by looking at current node 2. if fails or else keep looking
+    // if is the leaf node
+    if(!root->left && !root->right) return root->val == targetSum;
+    
+    // returns whether or not current node constitutes the path
+    return (hasPathSum(root->left, targetSum - root->val) || hasPathSum(root->right, targetSum - root->val) );
+}
+```
+
+#### *Sol2: BFS*
+
+Level-order traversal used to be something I was reluctant to resort to, but now its simplicity in logic has gained my favor
+
+```C++
+#include<queue>
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(!root) return false;
+        queue<TreeNode*> trqu;  // 
+        queue<int> sums;  // length of path till current node
+        trqu.push(root);
+        sums.push(root->val);
+
+        while(!trqu.empty()){
+            TreeNode* curNode = trqu.front(); trqu.pop();
+            int curSum = sums.front(); sums.pop();
+
+            if(!curNode->left && !curNode->right){
+                if(curSum == targetSum) return true;
+                else continue;  // doesn't work out this path. try out other paths.
+            }
+
+            if(curNode->left) {
+                trqu.push(curNode->left); sums.push(curNode->left->val + curSum);
+            }
+            if(curNode->right){
+                trqu.push(curNode->right); sums.push(curNode->right->val + curSum);
+            }
+        }
+        return false;
+    }
+};
+```
+
