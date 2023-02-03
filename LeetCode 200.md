@@ -530,3 +530,57 @@ public:
 };
 ```
 
+### 226. Invert Binary Tree (Easy)
+
+This relatively easier one reinforces our skills of using recursion.
+
+```C++
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(!root) return nullptr;
+        TreeNode* l = root->left, *r = root->right;
+        root->right = l; root->left = r;
+        invertTree(root->left); invertTree(root->right);
+        return root;
+    }
+};
+```
+
+### 617. Merge Two Binary Trees (Easy)
+
+I used to struggle with this one but now it's better. Identify our three goals:
+
+1. recursion exit: when both pointers hit null
+2. tasks within current level: combine current node; combine the children nodes
+3. return value: the partially combined tree. here we should return the current node as it is the root of that tree. 
+
+```C++
+class Solution {
+public:
+    
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        // exit
+        if(!(root1 || root2)) return nullptr; 
+        
+    // Task1 within current level: combine children nodes
+        
+        // If one of the node is nullptr, directly create a copy of another and return
+        if(!root1) return new TreeNode(root2->val, root2->left, root2->right);
+        if(!root2) return new TreeNode(root1->val, root1->left, root1->right);
+        // If both exist, combine their chidlren
+        TreeNode* mergedLeft = mergeTrees(root1->left, root2->left);
+        TreeNode* mergedRight = mergeTrees(root1->right, root2->right),
+        
+    // Task2 within current level: merge current nodes
+        TreeNode* newNode = new TreeNode(root1->val + root2->val);
+        
+    // Return the merged node
+        newNode->left = mergedLeft;
+        newNode->right = mergedRight;
+        return newNode;
+    }
+
+};
+```
+
