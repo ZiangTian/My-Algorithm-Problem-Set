@@ -777,3 +777,124 @@ public:
 
 By Feb 4th I haven't thoroughly grasped this usage. We'll see in the future.
 
+### [572. Subtree of Another Tree](https://leetcode.cn/problems/subtree-of-another-tree/) (Easy)
+
+#### *Sol1: BF with DFS* 
+
+This was all I had with me when I was doing it.
+
+```C++
+class Solution {
+public:
+    bool isSame(TreeNode* root, TreeNode* subRoot){
+        if(!root && !subRoot) return true;  // both null, true
+        if(!root || !subRoot) return false; // one null the other not, false
+        // neither null, judge
+        return (root->val == subRoot->val) && isSame(root->left, subRoot->left) && isSame(root->right, subRoot->right);
+    }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        if(!root && !subRoot) return true;  // both null, true
+        if(!root || !subRoot) return false; // one null the other not, false
+        return isSame(root, subRoot) || isSubtree(root->left, subRoot) || isSubtree(root->right, subRoot);
+    }
+};
+```
+
+#### *Sol2: String with KMP*
+
+> Property of pre-order traversal: the nodes in a child tree are contiguous as they are in the original tree
+
+To determine whether a tree contains another as a subtree, we only have to serialize both into s and t respectively, and determine whether t is a part of s ! That's where KMP comes in. But this does not make it right, bc if a node has a children while the substree doesn't, it still does not count as a subtree. To overcome this, we add a unique number to all leaf node in the sequentialized string.
+
+```C++
+/*This solution is buggy. It fails at sample input No.180*/
+#include <vector>
+using namespace std;
+class Solution {
+public:
+    const int null1 = 10001, null2 = 10002;
+    void getSequence(TreeNode* r, vector<int>& str){
+        if(r){
+            str.push_back(r->val);
+            if(!r->left) str.push_back(null1);else getSequence(r->left, str);
+            if(!r->right) str.push_back(null2); else getSequence(r->right, str);
+        }
+    }
+    void getNext(vector<int>& t, int* next){
+        int j = 0, k = -1, len = t.size();
+
+        next[0] = -1;
+
+        while(j < len - 1){
+            if(k == -1 || next[j] == next[k]){
+                k++; j++; next[j] = k;
+            }
+            else k = next[k];
+        }
+    }
+
+    int KMP(vector<int>& s, vector<int>& t){
+        int n=s.size(),m=t.size();
+        int * next = new int[m];
+        getNext(t,next);
+        int i=0,j=0;
+        while(i<n && j<m){
+        if(j==-1 || s[i]==t[j]){
+            i++;j++;
+        }
+        else j=next[j];
+        }
+        if(j>=m) return i-m;
+        else return -1;
+    }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        vector<int> s; vector<int> t;
+        getSequence(root, s);
+        getSequence(subRoot, t);
+
+        return KMP(s, t)>=0;
+    }
+};
+```
+
+#### *Sol3: [Hash](https://leetcode.cn/problems/symmetric-tree/solution/dui-cheng-er-cha-shu-by-leetcode-solution/)*
+
+### [101. Symmetric Tree](https://leetcode.cn/problems/symmetric-tree/) （Easy）
+
+This one is relatively more of a no-brainer compared with others.
+
+```C++
+class Solution {
+public:
+    bool dsf(TreeNode* l, TreeNode* r){
+        if(l && r){
+            return (l->val == r->val) && dsf(l->left, r->right) && dsf(l->right, r->left);
+        }
+        else if(!l && !r) return true;
+        else return false;
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(!root) return true;
+        return dsf(root->left, root->right);
+    }
+};
+```
+
+### [111. Minimum Depth of Binary Tree](https://leetcode.cn/problems/minimum-depth-of-binary-tree/) (Easy)
+
+Easy as it seems, this one got a pitfall that I walked right into. Its definition of a leaf node is a node that has no children, which means a node that only has one does not count.
+
+```C++
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root) return 0;
+        if(!root->left && !root->right) return 1;  // hits a leaf
+        if(root->left && root->right)  // both
+            return 1+ min(minDepth(root->left), minDepth(root->right));
+        if(root->left) return 1+ minDepth(root->left);
+        else return 1+ minDepth(root->right);
+    }
+};
+```
+
