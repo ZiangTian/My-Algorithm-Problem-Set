@@ -684,3 +684,96 @@ public:
 };
 ```
 
+### [437. Path Sum III](https://leetcode.cn/problems/path-sum-iii/) (Medium)
+
+#### *Sol1 : Recursion*
+
+> The fact that leetcode went so far as to devise a ridiculously big input just to fail my code is abhorrent. I finally got past the test when I changed the type into `long long` after an hour of struggling.
+
+We use rootSum to count the qualified paths that starts from a root node, and in pathSum we treat every node as a root node.
+
+```C++
+class Solution {
+public:
+    long long rootSum(TreeNode* root, long long targetSum) {
+        if (!root) return 0;
+        return rootSum(root->left, targetSum - root->val) + rootSum(root->right, targetSum - root->val) +  (root->val == targetSum);
+    }
+
+    int pathSum(TreeNode* root, long long targetSum) {
+        if (!root) return 0;
+        long long ret = rootSum(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
+        return ret;
+    }
+};
+```
+
+#### *Sol2: unordered_map + prefix sum*
+
+It's my first time using `unordered_map` so I've collected some references to the usage.
+
+> Like `map`, `unordered_map` can also be used as a dictionary, but `map` is implemented through Red-black tree, which makes all elements within it ordered, while `unordered_map` is implemented on hash, which lowers the time complexity and the elements are unordered.
+
+```C++
+/*This is only some reference*/
+
+#include<string>  
+#include<unordered_map>
+using namespace std; 
+unordered_map<string, int>  dict; // declaration
+
+// Three ways to insert data
+dict.insert(pair<string,int>("apple",2));
+dict.insert(unordered_map<string, int>::value_type("orange",3));
+dict["banana"] = 6;
+
+cout<<dict.empty()<<endl;  // if it is empty
+
+// iteration
+unordered_map<string, int>::iterator iter;
+for(iter=dict.begin();iter!=dict.end();iter++)
+	cout<<iter->first<<ends<<iter->second<<endl; // first points to key and second points to value
+
+// use iterator to search
+if((iter=dict.find("banana"))!=dict.end())
+	cout<<"banana="<<iter->second<<endl;
+else
+	cout<<"can't find it!"<<endl;
+```
+
+And the solution:
+
+```C++
+class Solution {
+public:
+    unordered_map<long long, int> prefix;   //< prefix_Sum, how_many_times_we_have_ this_prefix_sum>
+
+    int dfs(TreeNode *root, long long curr, int targetSum) {
+        if (!root) {
+            return 0;
+        }
+
+        int ret = 0;
+        curr += root->val;   // update current sum
+        if (prefix.count(curr - targetSum)) {
+            // if there exists a prefix sum that is curr - targetSum, then there exists a pathsum equal to targetSum
+            ret = prefix[curr - targetSum];  // number of pathsums equal to targetSum
+        }
+
+        prefix[curr]++;  // update the dictionary
+        ret += dfs(root->left, curr, targetSum);   // find all downstream paths
+        ret += dfs(root->right, curr, targetSum);
+        prefix[curr]--;  // restore the dictionary, bc we are looking for other nodes
+
+        return ret;
+    }
+
+    int pathSum(TreeNode* root, int targetSum) {
+        prefix[0] = 1; // there is only a single path whose prefix sum is 0: not_a_path
+        return dfs(root, 0, targetSum);
+    }
+};
+```
+
+By Feb 4th I haven't thoroughly grasped this usage. We'll see in the future.
+
