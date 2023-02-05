@@ -986,3 +986,94 @@ public:
 TBH, I cannot guarantee that [today](2023-2-5) I have fully grasped this one. I'll definitely revisit it some day.
 
 > funny enough just when i thought i was heading somewhere with recursion, i hit this one... hope i really get better at it...
+
+### [337. House Robber III](https://leetcode.cn/problems/house-robber-iii/) (Medium)
+
+#### *Sol1: unordered_map to record*
+
+This solution exceeded the time limit.
+
+```C++
+/*----------Buggy Code----------*/
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        // exit
+        if(!root) return 0;
+        // task within this level: evaluate the two methods
+        int method1 = rob(root->left) + rob(root->right);
+        int method2 = root->val;
+        if(root->left) method2 += rob(root->left->left) + rob(root->left->right);
+        if(root->right) method2 += rob(root->right->left) + rob(root->right->right);
+        // return the most money that can be earned if robbing current node
+        return max(method1, method2);
+    }
+};
+```
+
+Actually, by the time we reach the return value, we have already computed the most money taht can be earned for this Node. If we adopt an unordered_map to save it, a lot of time and space can be saved.
+
+```C++
+#include<unordered_map>
+using namespace std;
+class Solution {
+public:
+    unordered_map<TreeNode*, int> record;
+    int rob(TreeNode* root) {
+        if(!root) return 0;
+        
+        if(record.find(root)!= record.end()) return record[root];
+        
+        int method1 = rob(root->left) + rob(root->right);
+        int method2 = root->val;
+        if(root->left) method2 += rob(root->left->left) + rob(root->left->right);
+        if(root->right) method2 += rob(root->right->left) + rob(root->right->right);
+        
+        record[root] = max(method1, method2);
+        
+        return max(method1, method2);
+    }
+};
+```
+
+Now this solution does not cause a stack overflow.
+
+#### *Sol2: State induction*
+
+For every node, there exist two states: to rob and to not rob, which we represent with an array int [2]. 
+
+- To not rob, the earnings from this node are the earnings from its two children node **in all cases**.
+- To rob, the earnings from this node are the earnings from itself plus those from its its children **when to not rob**.
+
+$$
+node[0] = max(rob(node.left)[0], rob(node.left)[1]) + max(rob(node.right)[0] + node.right[1])
+$$
+
+$$
+node[1] = rob(node.left)[0] + rob(node.right)[0] + node->val
+$$
+
+```C++
+class Solution {
+public:
+    int* helper(TreeNode* r){
+        // return the earnings respectively of when to rob and when to not rob 
+        if(!r) {
+            int* tmp = new int[2];
+            tmp[0]=0; tmp[1] = 0;
+            return tmp;
+        }
+        int* curEarn = new int[2];
+        int* left_arr = helper(r->left);
+        int* right_arr = helper(r->right);
+        curEarn[0] = max(left_arr[0] , left_arr[1]) + max(right_arr[0] , right_arr[1]);
+        curEarn[1] = left_arr[0] + right_arr[0] + r->val;
+        return curEarn;
+    }
+    int rob(TreeNode* root) {
+        int* states = helper(root);
+        return max(states[0], states[1]);
+    }
+};
+```
+
