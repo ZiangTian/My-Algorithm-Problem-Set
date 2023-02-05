@@ -898,3 +898,91 @@ public:
 };
 ```
 
+### [404. Sum of Left Leaves](https://leetcode.cn/problems/sum-of-left-leaves/) (Easy)
+
+Note that according to the definition, a single node does not count as a left leaf bc it is no left child of others.
+
+```C++
+class Solution {
+public:
+    // according to the definition, a single node does not count as a left leaf
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(!root) return 0;
+        int gain = 0;  // the gain of next level
+        // gain only if when curNode has a left child that has no children
+        if(root->left && !root->left->left && !root->left->right) 
+            gain = root->left->val;
+        // Otherwise: has a left node but which has children
+        return gain + sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right); 
+    }
+};
+```
+
+### [687. Longest Univalue Path](https://leetcode.cn/problems/longest-univalue-path/) （Medium）
+
+My initial idea of this one was flawed. Like [Diameter](https://leetcode.com/problems/diameter-of-binary-tree/), I simply focused on getting the path through a certain node and then iterating all over the tree, and the path length is a sum of its left subtree and right subtree. Therefore, I set the return value of my function lupr to be the longest univalue path running ***through*** the root, not ***from*** the root.
+
+```C++
+/*---------WRONG CODE---------*/
+class Solution {
+public:
+    int maxpath;
+    int lupr(TreeNode* r){ // longest univalue path from the root
+        if(!r) return 0;
+        int left_lupr = 0, right_lupr = 0;
+        if(r->left && r->left->val == r->val) left_lupr = 1 + lupr(r->left);
+        if(r->right && r->right->val == r->val) right_lupr = 1 + lupr(r->right);
+        // with no child, 0
+        maxpath = max(maxpath, left_lupr +right_lupr);
+        return left_lupr + right_lupr ;
+    }
+    int longestUnivaluePath(TreeNode* root) {
+        if(!root) return 0;
+        //return lupr(root);
+        return max(lupr(root), max(longestUnivaluePath(root->left), longestUnivaluePath(root->right)));
+    }
+};
+```
+
+But this is wrong. Imagine on the next level, to acquire the longest univalue path, we keep on looking, not for another path that ***splits at*** (runs through) the node, but ***stems from*** the node, because that's how we form an undiverging path. So we should designate the return value of that function to be the length of the longest path from the root. 
+
+But how do we calculate the longest path that runs through current node? Take the sum. We maintain a shared variable to keep track of the longest path to date. 
+
+Another problem with the code is that it fails to zero when mismatch happens. When we hit a different-value node, we should immediately set the path length to zero and start over.
+
+```C++
+class Solution {
+public:
+    int maxpath;
+    int lupr(TreeNode* r){ // longest univalue path from the root
+    // returns a the length of the longest one-side path stemming from current node that has the same value with current node 
+        if(!r) return 0;
+        
+        // must keep recursion, bc the children nodes may contain longer paths.
+        // left_lupr is the longest path univalue till r->left
+        int left_lupr = lupr(r->left), right_lupr = lupr(r->right);
+        
+        if(r->left) {
+            if(r->left->val == r->val)left_lupr ++;
+            else left_lupr = 0;  // if different, zero
+        }
+        if(r->right) { 
+            if(r->right->val == r->val) right_lupr ++;
+            else right_lupr = 0;
+        }
+        
+        maxpath = max(maxpath, left_lupr + right_lupr);
+        return max(left_lupr, right_lupr) ;
+    }
+    int longestUnivaluePath(TreeNode* root) {
+        if(!root) return 0;
+        maxpath = 0;
+        lupr(root);
+        return maxpath;
+    }
+};
+```
+
+TBH, I cannot guarantee that [today](2023-2-5) I have fully grasped this one. I'll definitely revisit it some day.
+
+> funny enough just when i thought i was heading somewhere with recursion, i hit this one... hope i really get better at it...
