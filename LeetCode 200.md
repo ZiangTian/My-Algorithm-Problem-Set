@@ -399,7 +399,7 @@ Actually only 2 loops are needed: one for the outer iteration to fill all the no
 
 > key takeway: learn to view loops from a different perspective.
 
-### 104. Maximum Depth of Binary Tree (Easy)
+### [104. Maximum Depth of Binary Tree (Easy)](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
 
 #### *Sol1: BFS*
 
@@ -1073,6 +1073,75 @@ public:
     int rob(TreeNode* root) {
         int* states = helper(root);
         return max(states[0], states[1]);
+    }
+};
+```
+
+### [671. Second Minimum Node In a Binary Tree](https://leetcode.cn/problems/second-minimum-node-in-a-binary-tree/) （Easy）
+
+We designate the return value of our recursive function to be the second minimum value that can be found from current node.
+
+```C++
+class Solution {
+public:
+    int findSecondMinimumValue(TreeNode* root) {
+        // exit
+        if(!root || !(root->left || root->right)) return -1;
+        
+        // key. second minimum val only appears when
+        if(root->left && root->right){
+            if(root->left->val == root->right->val){
+                // if the same, go to child nodes. But remember to judge the positivity of results! otherwise -1 would ususally gets returned.
+                int left_m = findSecondMinimumValue(root->left);
+                int right_m = findSecondMinimumValue(root->right);
+                if(left_m<0) return right_m;
+                if(right_m<0) return left_m;
+                return min(right_m, left_m);
+            } 
+            else {
+                // if different, do not rush to return. smaller values may appear in under the currently smaller node
+                TreeNode* smaller = (root->left->val > root->right->val) ? root->right : root->left;
+                TreeNode* bigger = (root->left->val > root->right->val) ? root->left : root->right;
+                int smaller_side = findSecondMinimumValue(smaller);
+                return (smaller_side>0) ? min(bigger->val, smaller_side) : bigger->val;
+            }
+        }
+        if(root->left) return findSecondMinimumValue(root->left);
+        else return findSecondMinimumValue(root->right);
+
+    }
+};
+```
+
+### [637. Average of Levels in Binary Tree](https://leetcode.cn/problems/average-of-levels-in-binary-tree/) (Easy)
+
+Using the trick learnt at [104](https://leetcode.com/problems/maximum-depth-of-binary-tree/), we can easily acquire the ins and outs of the nodes on a certain level.
+
+```C++
+#include<queue>
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        queue<TreeNode*> qu;
+        TreeNode* p = root;
+        qu.push(p);
+        vector<double>v;
+
+        while(!qu.empty()){
+            double curNodes = qu.size();
+            double sum = 0, cnt = 0;
+            while(curNodes>0){
+                p = qu.front(); qu.pop();
+                if(p->left) qu.push(p->left);
+                if(p->right) qu.push(p->right);
+                curNodes--;
+                cnt++;
+                sum += (double) p->val;
+            }
+            double avg = sum / cnt;
+            v.push_back(avg);
+        }
+        return v;
     }
 };
 ```
