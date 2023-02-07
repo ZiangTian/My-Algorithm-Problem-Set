@@ -4,7 +4,9 @@
 
 ## Data Structure
 
-### 160  Intersection of Two Linked Lists (Easy)
+### Linked List
+
+#### 160  Intersection of Two Linked Lists (Easy)
 
 In essence the problem exploits the math property of loops, and the key is finding an equation.  Many problems derive from mathematical ones and the solution is in a key equation.
 
@@ -21,7 +23,7 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 
 **Note that in this solution, the iterating condition is `l1 == nullptr` rather than `l1->next == nullptr`, in which case when `l1` hits the end and becomes `nullptr` the loop gets stuck.**
 
-### 206 Reverse Linked List (Easy)
+#### 206 Reverse Linked List (Easy)
 
 Recursive solution: This requires us to  write the exit at the top of the entry. Bear in mind that head, after the function, should be at the end of the list, pointing to nullptr.
 
@@ -49,9 +51,9 @@ public:
 
 > For any confusion with Recursion, [this website](https://lyl0724.github.io/2020/01/25/1/) does a good job explaining it. 
 
-### 19 Remove Nth Node From the End of List (Medium)
+#### 19 Remove Nth Node From the End of List (Medium)
 
-#### *Sol1: Stack*
+##### *Sol1: Stack*
 
 While iterating through the list, push the nodes into a stack (FILO), which means the n-th popped node is the one to be deleted, and that the node currently on top of the stack is the prenode of it.
 
@@ -87,7 +89,7 @@ public:
 
 Note that it is even better to use a dummyHead as shown in the [official solution,](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/solution/shan-chu-lian-biao-de-dao-shu-di-nge-jie-dian-b-61/) which saves the trouble of ascertaining whether the stack is empty.
 
-#### *Sol2: Double pointers*
+##### *Sol2: Double pointers*
 
 Use two pointers, `first` and `second` to iterate over the list, with `first` starting first and `second` starting off when `first` has gone over n nodes. In this way, when `first` hits the tail, `second` will be at the target node.
 
@@ -109,9 +111,9 @@ public:
 };
 ```
 
-### 24. Swap Nodes in Pairs (Medium)
+#### 24. Swap Nodes in Pairs (Medium)
 
-#### ***Sol1: Recursion***
+##### ***Sol1: Recursion***
 
 > Three considerations when using a recursive structure:
 >
@@ -135,7 +137,7 @@ public:
 };
 ```
 
-#### *Sol2: Iteration*
+##### *Sol2: Iteration*
 
 In this non-recursive solution, 3 pointers (temp, node1, node2 respectively) are used and a dummy head is added. The interaction between these pointers can get confusing:
 
@@ -161,9 +163,9 @@ public:
 };
 ```
 
-### 445. Add Two Numbers II (Medium)
+#### 445. Add Two Numbers II (Medium)
 
-#### ***Sol1: Reverse the list with recursion***
+##### ***Sol1: Reverse the list with recursion***
 
 ```C++
 class Solution {
@@ -233,7 +235,7 @@ This solution should be very straightforward structurally, but there are two key
 
 However, it should be intuitive to **use stack when handling reverse-order operation**, as shown in the following code:
 
-#### *Sol2: Stack*
+##### *Sol2: Stack*
 
 ```c++
 class Solution {
@@ -269,9 +271,9 @@ public:
 
 Note that the order of the original list remains intact.
 
-### 234. Palindrome Linked List (Easy)
+#### 234. Palindrome Linked List (Easy)
 
-#### *Sol1: Stack* 
+##### *Sol1: Stack* 
 
 Following the solutions of [Prob 445](https://leetcode.com/problems/add-two-numbers-ii/), [Prob 24](https://leetcode.com/problems/swap-nodes-in-pairs/), stack is our top consideration when handling this:
 
@@ -299,7 +301,7 @@ public:
 
 However, using stack here can be rather space-consuming. We may improve this by only comparing half of the nodes, but another way to tackle it is a combination of crucial tricks required for handling linked lists.
 
-#### *Sol2: find_middle, reverse, and check*
+##### *Sol2: find_middle, reverse, and check*
 
 We divide the designated task into several subtasks:
 
@@ -351,7 +353,7 @@ ListNode* reverse(ListNode* head) {
 
 **A key takeaway is the method to locate the middle node in here. If `fast` is non-null, then point `slow` to the next node, which is exactly the middle node**.
 
-### 725. Split Linked List in Parts(Medium)
+#### 725. Split Linked List in Parts(Medium)
 
 I got into a bit of trouble in this one. 
 $$
@@ -399,9 +401,11 @@ Actually only 2 loops are needed: one for the outer iteration to fill all the no
 
 > key takeway: learn to view loops from a different perspective.
 
-### [104. Maximum Depth of Binary Tree (Easy)](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+### Tree
 
-#### *Sol1: BFS*
+#### [104. Maximum Depth of Binary Tree (Easy)](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+##### *Sol1: BFS*
 
 This code offers important insights on calculating the exact number of nodes on a level:
 
@@ -433,7 +437,7 @@ public:
 
 In the code, every initial value of `curLev` is the number of nodes on current level.
 
-#### *Sol2: DFS*
+##### *Sol2: DFS*
 
 This should be more intuitive:
 
@@ -454,7 +458,7 @@ public:
 
 Note that by calling `maxDepth`, we are diving deeper into the tree, hence the increment of `maxDepth`.
 
-### 110. Balanced Binary Tree (Easy)
+#### 110. Balanced Binary Tree (Easy)
 
 My solution at first shot. For those "attribute-judging" problems, usually:
 
@@ -501,7 +505,7 @@ public:
 };
 ```
 
-### 543. Diameter of Binary Tree (Easy)
+#### 543. Diameter of Binary Tree (Easy)
 
 Things were pretty smooth with this one. After quite some analysis, the process got more straightforward:
 
@@ -530,7 +534,7 @@ public:
 };
 ```
 
-### 226. Invert Binary Tree (Easy)
+#### 226. Invert Binary Tree (Easy)
 
 This relatively easier one reinforces our skills of using recursion.
 
@@ -547,7 +551,7 @@ public:
 };
 ```
 
-### 617. Merge Two Binary Trees (Easy)
+#### 617. Merge Two Binary Trees (Easy)
 
 I used to struggle with this one but now it's better. Identify our three goals:
 
@@ -586,7 +590,7 @@ public:
 
 > Note that we created a new, independent tree here rather than one with borrowed nodes from the previous trees.
 
-### 112. Path Sum (Easy)
+#### 112. Path Sum (Easy)
 
 Again, I hit a rough patch with this one. I attempted to iterate all over the tree and find all paths from the root to the leaves with the following code (which worked out fine but got into a vague definition problem over whether the root node counts as a leaf node). It utilizes the property of the vector that automatically retires to its prior state in a recursion:
 
@@ -632,7 +636,7 @@ public:
 
 Anyways, it got trickier and trickier before I finally quit. (Though it did inspire me to figure out a way to find all the root-to-leaf paths).
 
-#### *Sol1: Recursion*
+##### *Sol1: Recursion*
 
 Always treat the tree on a certain level of recursion as a node with two children, both of which are like an unknown cloud.
 
@@ -648,7 +652,7 @@ bool hasPathSum(TreeNode* root, int targetSum){
 }
 ```
 
-#### *Sol2: BFS*
+##### *Sol2: BFS*
 
 Level-order traversal used to be something I was reluctant to resort to, but now its simplicity in logic has gained my favor
 
@@ -684,9 +688,9 @@ public:
 };
 ```
 
-### [437. Path Sum III](https://leetcode.cn/problems/path-sum-iii/) (Medium)
+#### [437. Path Sum III](https://leetcode.cn/problems/path-sum-iii/) (Medium)
 
-#### *Sol1 : Recursion*
+##### *Sol1 : Recursion*
 
 > The fact that leetcode went so far as to devise a ridiculously big input just to fail my code is abhorrent. I finally got past the test when I changed the type into `long long` after an hour of struggling.
 
@@ -708,7 +712,7 @@ public:
 };
 ```
 
-#### *Sol2: unordered_map + prefix sum*
+##### *Sol2: unordered_map + prefix sum*
 
 It's my first time using `unordered_map` so I've collected some references to the usage.
 
@@ -777,9 +781,9 @@ public:
 
 By Feb 4th I haven't thoroughly grasped this usage. We'll see in the future.
 
-### [572. Subtree of Another Tree](https://leetcode.cn/problems/subtree-of-another-tree/) (Easy)
+#### [572. Subtree of Another Tree](https://leetcode.cn/problems/subtree-of-another-tree/) (Easy)
 
-#### *Sol1: BF with DFS* 
+##### *Sol1: BF with DFS* 
 
 This was all I had with me when I was doing it.
 
@@ -800,7 +804,7 @@ public:
 };
 ```
 
-#### *Sol2: String with KMP*
+##### *Sol2: String with KMP*
 
 > Property of pre-order traversal: the nodes in a child tree are contiguous as they are in the original tree
 
@@ -857,9 +861,9 @@ public:
 };
 ```
 
-#### *Sol3: [Hash](https://leetcode.cn/problems/symmetric-tree/solution/dui-cheng-er-cha-shu-by-leetcode-solution/)*
+##### *Sol3: [Hash](https://leetcode.cn/problems/symmetric-tree/solution/dui-cheng-er-cha-shu-by-leetcode-solution/)*
 
-### [101. Symmetric Tree](https://leetcode.cn/problems/symmetric-tree/) （Easy）
+#### [101. Symmetric Tree](https://leetcode.cn/problems/symmetric-tree/) （Easy）
 
 This one is relatively more of a no-brainer compared with others.
 
@@ -880,7 +884,7 @@ public:
 };
 ```
 
-### [111. Minimum Depth of Binary Tree](https://leetcode.cn/problems/minimum-depth-of-binary-tree/) (Easy)
+#### [111. Minimum Depth of Binary Tree](https://leetcode.cn/problems/minimum-depth-of-binary-tree/) (Easy)
 
 Easy as it seems, this one got a pitfall that I walked right into. Its definition of a leaf node is a node that has no children, which means a node that only has one does not count.
 
@@ -898,7 +902,7 @@ public:
 };
 ```
 
-### [404. Sum of Left Leaves](https://leetcode.cn/problems/sum-of-left-leaves/) (Easy)
+#### [404. Sum of Left Leaves](https://leetcode.cn/problems/sum-of-left-leaves/) (Easy)
 
 Note that according to the definition, a single node does not count as a left leaf bc it is no left child of others.
 
@@ -918,7 +922,7 @@ public:
 };
 ```
 
-### [687. Longest Univalue Path](https://leetcode.cn/problems/longest-univalue-path/) （Medium）
+#### [687. Longest Univalue Path](https://leetcode.cn/problems/longest-univalue-path/) （Medium）
 
 My initial idea of this one was flawed. Like [Diameter](https://leetcode.com/problems/diameter-of-binary-tree/), I simply focused on getting the path through a certain node and then iterating all over the tree, and the path length is a sum of its left subtree and right subtree. Therefore, I set the return value of my function lupr to be the longest univalue path running ***through*** the root, not ***from*** the root.
 
@@ -987,9 +991,9 @@ TBH, I cannot guarantee that [today](2023-2-5) I have fully grasped this one. I'
 
 > funny enough just when i thought i was heading somewhere with recursion, i hit this one... hope i really get better at it...
 
-### [337. House Robber III](https://leetcode.cn/problems/house-robber-iii/) (Medium)
+#### [337. House Robber III](https://leetcode.cn/problems/house-robber-iii/) (Medium)
 
-#### *Sol1: unordered_map to record*
+##### *Sol1: unordered_map to record*
 
 This solution exceeded the time limit.
 
@@ -1038,7 +1042,7 @@ public:
 
 Now this solution does not cause a stack overflow.
 
-#### *Sol2: State induction*
+##### *Sol2: State induction*
 
 For every node, there exist two states: to rob and to not rob, which we represent with an array int [2]. 
 
@@ -1077,7 +1081,7 @@ public:
 };
 ```
 
-### [671. Second Minimum Node In a Binary Tree](https://leetcode.cn/problems/second-minimum-node-in-a-binary-tree/) （Easy）
+#### [671. Second Minimum Node In a Binary Tree](https://leetcode.cn/problems/second-minimum-node-in-a-binary-tree/) （Easy）
 
 We designate the return value of our recursive function to be the second minimum value that can be found from current node.
 
@@ -1113,7 +1117,7 @@ public:
 };
 ```
 
-### [637. Average of Levels in Binary Tree](https://leetcode.cn/problems/average-of-levels-in-binary-tree/) (Easy)
+#### [637. Average of Levels in Binary Tree](https://leetcode.cn/problems/average-of-levels-in-binary-tree/) (Easy)
 
 Using the trick learnt at [104](https://leetcode.com/problems/maximum-depth-of-binary-tree/), we can easily acquire the ins and outs of the nodes on a certain level.
 
@@ -1142,6 +1146,167 @@ public:
             v.push_back(avg);
         }
         return v;
+    }
+};
+```
+
+#### [513. Find Bottom Left Tree Value](https://leetcode.cn/problems/find-bottom-left-tree-value/) (Medium)
+
+##### *Sol1: trick*
+
+Considering that ordinary level-order traversal does not draw a line between the levels, we still stick to our trick, with a variable maintained.
+
+```C++
+#include<queue>
+class Solution {
+public:
+    TreeNode* res;
+    int findBottomLeftValue(TreeNode* root) {
+        queue<TreeNode*> qu;
+        TreeNode* p = root;
+        qu.push(p);
+
+        while(!qu.empty()){
+            int curNum = qu.size();
+            int track = curNum;
+            while(curNum > 0){
+                p = qu.front(); qu.pop();
+                if(curNum == track) res = p; // must be the first node of some level
+
+                if(p->left) qu.push(p->left);
+                if(p->right) qu.push(p->right);
+                curNum--;
+            }
+        }
+        return res->val;
+    }
+};
+```
+
+##### *Sol2: right-to-left level-order traversal*
+
+The leftmost bottom-most node is exactly the last node in a right-to-left level-order traversal:
+
+```C++
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        int ret;
+        queue<TreeNode *> q;
+        q.push(root);
+        while (!q.empty()) {
+            auto p = q.front();
+            q.pop();
+            if (p->right) {
+                q.push(p->right);
+            }
+            if (p->left) {
+                q.push(p->left);
+            }
+            ret = p->val;
+        }
+        return ret;
+    }
+};
+```
+
+#### [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks/) (Easy)
+
+My initial shot was like this:
+
+```C++
+#include<stack>
+using namespace std;
+class MyQueue {
+public:
+    stack<int> st1;
+    stack<int> st2;
+        
+    MyQueue() {
+    }
+    
+    void push(int x) {
+        st1.push(x);
+    }
+    
+    int pop() {
+        int tmp, res;
+        while(!st1.empty()){ //dump st1 elements to st2
+            res = st1.top(); st1.pop();
+            st2.push(res);
+        }
+        st2.pop();
+        while(!st2.empty()){
+            tmp = st2.top(); st2.pop();
+            st1.push(tmp);
+        }
+        return res;
+    }
+    
+    int peek() {
+        int tmp, res;
+        while(!st1.empty()){
+            res = st1.top(); st1.pop();
+            st2.push(res);
+        }
+        while(!st2.empty()){
+            tmp = st2.top(); st2.pop();
+            st1.push(tmp);
+        }
+        return res;
+    }
+    
+    bool empty() {
+        return st1.empty();
+    }
+};
+```
+
+But studying the official solution, we do not have to move the st2 elements back to st1 again every time we do a peek or pop:
+
+- Instack: temporily store some elements that will go to Outstack for peek or pop.
+- Outstack: store elements like a queue. Before it is empty, it does not take in new elements.
+
+![image-20230207235239371](C:\Users\Benjamin\AppData\Roaming\Typora\typora-user-images\image-20230207235239371.png)
+
+```C++
+class MyQueue {
+private:
+    stack<int> inStack, outStack;
+
+    void in2out() {
+        while (!inStack.empty()) {
+            outStack.push(inStack.top());
+            inStack.pop();
+        }
+    }
+
+public:
+    MyQueue() {}
+
+    void push(int x) {
+        inStack.push(x);
+    }
+
+    int pop() {
+        if (outStack.empty()) { // KEY !!!!!!
+            // only go to outstack if it's all empty
+            in2out();
+        }
+        int x = outStack.top();
+        outStack.pop();
+        return x;
+    }
+
+    int peek() {
+        if (outStack.empty()) {
+            in2out();
+        }
+        return outStack.top();
+    }
+
+    bool empty() {
+        return inStack.empty() && outStack.empty();
     }
 };
 ```
