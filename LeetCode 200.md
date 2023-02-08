@@ -1210,7 +1210,7 @@ public:
 };
 ```
 
-#### [232. 用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks/) (Easy)
+#### [232. Implement Queues using Stacks](https://leetcode.cn/problems/implement-queue-using-stacks/) (Easy)
 
 My initial shot was like this:
 
@@ -1307,6 +1307,138 @@ public:
 
     bool empty() {
         return inStack.empty() && outStack.empty();
+    }
+};
+```
+
+#### [225. Implement Stack using Queues](https://leetcode.cn/problems/implement-stack-using-queues/) (Easy)
+
+##### *Sol1: Two Queues*
+
+I alternately use this two queues as main queue to store elements. 
+
+To get the element at the tail of the queue, we send all the elements before it into another queue, and use .front to get the element. After this we have an empty queue and a complete queue. Before each pop or top, we need to find out which one is complete so that we can start moving elements off it.
+
+```C++
+#include<queue>
+using namespace std;
+class MyStack {
+public:
+    queue<int> qu1;
+    queue<int> qu2;
+    MyStack() {}
+
+    int handle(int opt){ // opt: if 1, needs to pop
+        int res;
+        if(qu1.empty()){
+            while(!qu2.empty()){
+                res = qu2.front();
+                qu2.pop();
+
+                if(qu2.empty() && opt);
+                else qu1.push(res);
+            }
+        }
+        else{
+            while(!qu1.empty()){
+                res = qu1.front();
+                qu1.pop();
+
+                if(qu1.empty() && opt);
+                else qu2.push(res);
+            }
+        }
+        return res;
+    }
+    void push(int x) {
+        if(!qu1.empty()) qu1.push(x);
+        else qu2.push(x);
+
+    }
+    
+    int pop() {
+        return handle(1);
+    }
+    
+    int top() {
+        return handle(0);
+    }
+    
+    bool empty() {
+        return qu1.empty() && qu2.empty();
+    }
+};
+
+```
+
+##### *Sol2: One Queue*
+
+In push, we push the element into the queue, and constantly push-pop elements in the queue till we get the target element. (Imagine waiting in a queue and people in front you quickly getting things done and leaving, in this case you can get to the front quite soon.) 
+
+```C++
+class MyStack {
+public:
+    queue<int> q;
+    /** Initialize your data structure here. */
+    MyStack() {}
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        int n = q.size();
+        q.push(x);
+        for (int i = 0; i < n; i++) {
+            q.push(q.front());
+            q.pop();
+        }
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int r = q.front();
+        q.pop();
+        return r;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        int r = q.front();
+        return r;
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return q.empty();
+    }
+};
+```
+
+#### [739. Daily Temperatures](https://leetcode.cn/problems/daily-temperatures/) （Medium）
+
+**Monotonic Stack** : *a stack in which the elements are in increasing or decreasing order from the bottom to the top of the stack.* 
+
+This is a good model we can resort to whenever we run into problems related to the first minimum/ maximum elements from a certain element.
+
+```C++
+#include<stack>
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        stack<int> indices;  //store the indices of temps
+        int itr, len = temperatures.size();
+        indices.push(0);
+        vector<int> ans(len);
+        for(itr = 0; itr < len ; ++itr){ // examine elements one by one
+            int curHighInd = indices.top();
+            // found a higher temperature, process all previous remaining ones that are lower than it 
+            while(!indices.empty() && temperatures[itr] > temperatures[curHighInd]){
+                ans[curHighInd] = itr - curHighInd;
+                indices.pop();
+                if(!indices.empty()) curHighInd = indices.top();
+            }
+            // after processing, store the index
+            indices.push(itr);
+        }
+        return ans;
     }
 };
 ```
