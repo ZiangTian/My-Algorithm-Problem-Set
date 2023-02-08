@@ -1443,3 +1443,30 @@ public:
 };
 ```
 
+#### [503. Next Greater Element II](https://leetcode.cn/problems/next-greater-element-ii/) （Medium）
+
+Taking the similar strategy to the previous problem, the solution should be straightforward:
+
+```C++
+#include<stack>
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        stack<int> indices;
+        indices.push(0);
+        int len = nums.size(), i;
+        vector<int> ans(len, -1);
+        for(i = 1; i < 2*len - 1 ; i++){
+            // choosing 2*len -1 ensures that the loop ends right before each element is visited again, thus obviateing the need for another visited array.
+            while(!indices.empty() && nums[i % len] > nums[indices.top()]){ // found a greater number
+                int got = indices.top(); // id of previous greater one
+                indices.pop();
+                ans[got] = nums[i%len];
+            }
+            indices.push(i%len);
+        }
+        return ans;
+    }
+};
+```
+
