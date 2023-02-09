@@ -1,3 +1,6 @@
+The original link is [here] (https://leetcode.com/discuss/study-guide/1326900/graph-algorithms-problems-to-practice)
+It can also be viewed in my notion space https://benjaminbutton.notion.site/Graph-algorithms-problems-to-practice-LeetCode-Discuss-548b6b02fc544cf3a828455099d1c177
+
 Hi folks! I created a small list of graph problems that can be useful to memorize/practice to solve more graph problems (from my point of view).
  We should not memorize the algorithm itself, but rather the idea and some implementation notes. So under each algorithm I put notes which can help to remember the algorithm.
 
