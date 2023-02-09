@@ -1,4 +1,4 @@
-The original link is [here] (https://leetcode.com/discuss/study-guide/1326900/graph-algorithms-problems-to-practice)
+The original link is [https://leetcode.com/discuss/study-guide/1326900/graph-algorithms-problems-to-practice] (here)
 It can also be viewed in my notion space https://benjaminbutton.notion.site/Graph-algorithms-problems-to-practice-LeetCode-Discuss-548b6b02fc544cf3a828455099d1c177
 
 Hi folks! I created a small list of graph problems that can be useful to memorize/practice to solve more graph problems (from my point of view).
