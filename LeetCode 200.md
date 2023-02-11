@@ -1470,3 +1470,95 @@ public:
 };
 ```
 
+### Graph
+
+#### [207. Course Schedule](https://leetcode.cn/problems/course-schedule/) (Medium)
+
+My solution is rather lumbersome and ponderous:
+
+```C++
+#include<queue>
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // pair [0,1] means that course 0 relies on course 1
+        int relies = prerequisites.size(); // num of relies
+        vector<int>dependent(numCourses,0); 
+        vector<vector<int>> g(numCourses,vector<int>(numCourses,0));
+        queue<int> indie;
+        for(int i = 0; i < relies; i++){
+           g[prerequisites[i][0]][prerequisites[i][1]] = 1;
+           dependent[prerequisites[i][0]]++;
+        }
+        for(int i = 0; i < numCourses; i++){
+           if(!dependent[i]) {
+               indie.push(i);
+               dependent[i] = -1; // visited
+           }
+        }
+
+        while(!indie.empty()){         
+           int curNode = indie.front(); indie.pop();
+           // decrement the out ind of nodes reliant on curNode
+           for(int j = 0; j < numCourses; j++){
+               if(g[j][curNode]){ // if reliant
+                   g[j][curNode]--;
+                   dependent[j]--;
+               } 
+            }
+            for(int i = 0; i < numCourses; i++)  // again find all indies
+                if(!dependent[i] && dependent[i] != -1) {
+                    indie.push(i);
+                    dependent[i] = -1;
+                }   
+        }
+        for(int i = 0; i < numCourses; i++)
+            if(dependent[i] != -1) return false;
+        return true; 
+    }
+};
+```
+
+The [official solution](https://leetcode.cn/problems/course-schedule/solution/ke-cheng-biao-by-leetcode-solution/) offers another perspective on topological sorting:
+
+```C++
+class Solution {
+private:
+    vector<vector<int>> edges;
+    vector<int> visited;
+    bool valid = true;
+
+public:
+    void dfs(int u) {
+        visited[u] = 1;
+        for (int v: edges[u]) {
+            if (visited[v] == 0) {
+                dfs(v);
+                if (!valid) {
+                    return;
+                }
+            }
+            else if (visited[v] == 1) {
+                valid = false;
+                return;
+            }
+        }
+        visited[u] = 2;
+    }
+
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        edges.resize(numCourses);
+        visited.resize(numCourses);
+        for (const auto& info: prerequisites) {
+            edges[info[1]].push_back(info[0]);
+        }
+        for (int i = 0; i < numCourses && valid; ++i) {
+            if (!visited[i]) {
+                dfs(i);
+            }
+        }
+        return valid;
+    }
+};
+```
+
