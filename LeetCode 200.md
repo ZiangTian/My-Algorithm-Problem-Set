@@ -1562,3 +1562,24 @@ public:
 };
 ```
 
+### Heap
+
+#### [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/) (Medium)
+
+I directly used priority_queue in C++ as my heap. Should’ve written one myself but I’m busy preparing for my final these days.
+
+```C++
+#include<queue>
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int> bh;
+        for(auto i : nums){
+            bh.push(i);
+        }
+        for(int i = 0; i < k - 1; i++) bh.pop();
+        return bh.top();
+    }
+};
+```
+
