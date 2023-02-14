@@ -1583,3 +1583,53 @@ public:
 };
 ```
 
+### Search
+
+#### [33. Search in Rotated Sorted Array](https://leetcode.cn/problems/search-in-rotated-sorted-array/)(Medium)
+
+The problem requires a solution of time complexity $O(log_2n)$, which I had a rough idea but failed to find out what was wrong with my implementation. This is a straightforward solution:
+
+In a word, we split the array by into two halves and one of them must be in ascending order. Apply binary search on the ordered half and split the unordered half into halves again:
+
+```C++
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int n = (int)nums.size();
+        if (!n) {
+            return -1;
+        }
+        if (n == 1) {
+            return nums[0] == target ? 0 : -1;
+        }
+        int l = 0, r = n - 1;
+        while (l <= r) {
+       
+            int mid = (l + r) / 2;
+            if (nums[mid] == target) return mid;
+            if (nums[l] <= nums[mid]) {
+                // if the left half is in order
+                if (nums[l] <= target && target < nums[mid]) {
+                    // if the target is in the left half
+                    r = mid - 1;
+                } else {
+                    // else the target can be in the right half
+                    l = mid + 1;
+                }
+            } 
+            else {
+                // if the left half is out of order
+                if (nums[mid] < target && target <= nums[r]) {
+                    // if the answer is in the right half
+                    l = mid + 1;
+                } else {
+                    // then the answer can be in the left half
+                    r = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+};
+```
+
