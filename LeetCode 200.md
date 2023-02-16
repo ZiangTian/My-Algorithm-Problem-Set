@@ -1633,3 +1633,81 @@ public:
 };
 ```
 
+
+
+#### [785. Is Graph Bipartite?](https://leetcode.cn/problems/is-graph-bipartite/)  (Medium)
+
+My initial solution was like this:
+
+```C++
+class Solution {
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        // coloring nodes
+        int nodes = graph.size();
+        // if(nodes % 2 == 1) return false;
+        vector<int> color(nodes, 0);
+        color[0] = 1; // color the 1st one black
+
+        for(int i = 0; i<nodes ;i++){
+            int numOfAdj = graph[i].size();  
+            for(int j = 0; j< numOfAdj; j++){ 
+                if(color[graph[i][j]]==0){   
+                    if(color[i]==1) color[graph[i][j]] = 2;
+                    else color[graph[i][j]] = 1;
+                }
+                else{
+                    if(color[graph[i][j]] == color[i]) return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+```
+
+It worked until I ran into some large samples. However, that’s not where the problem really lies.
+
+```C++
+
+class Solution {
+public:
+    const int UNCOLORED = 0;
+    const int RED = 1;
+    const int GREEN = 2;
+    vector<int>color;
+    bool flag;
+
+    void dfs(vector<vector<int>>& g, int v, int tocol){ // 给当前结点上色，并判断所有相邻的
+
+                color[v] = tocol;
+        int cNei = (tocol == RED ? GREEN : RED);
+        for (int neighbor: g[v]) {
+            if (color[neighbor] == UNCOLORED) {
+                dfs(g,neighbor, cNei);
+                if (!flag) {
+                    return;
+                }
+            }
+            else if (color[neighbor] != cNei) {
+                flag = false;
+                return;
+            }
+        }
+     
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+       
+        int n = graph.size();
+        flag = true;
+        color.assign(n, UNCOLORED);
+        for (int i = 0; i < n && flag; ++i) {
+            if (color[i] == UNCOLORED) {
+                dfs(graph,i, RED);
+            }
+        }
+        return flag;
+    }
+};
+```
+
