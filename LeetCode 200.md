@@ -1210,6 +1210,49 @@ public:
 };
 ```
 
+#### [1448. Count Good Nodes in Binary Tree](https://leetcode.cn/problems/count-good-nodes-in-binary-tree/) (Medium)
+
+The solution is relatively straightforward. To be able to think of using a variable `max_to_cur`, however, took me several minutes. Here’s a brief picture of my thoughts:
+
+> how do we judge if the child of our current node is a good node?  
+>
+> - if current node is good:
+   - - if child val is smaller: child is not good
+     - if child val is greater: child is good
+   - if current node is not good:
+   - - if child node is smaller: child is not good
+     - if is greater: can not be ascertained. need to examine the actual maximum val on the path
+
+```C++
+class Solution {
+public:
+    int judge(TreeNode* r, int max_to_cur){
+        // max_to_cur stores the maximum val from root to curNode
+        // what to return? total num of good nodes from curNodes
+        // what to do? judge if is good node and recursively judge its children 
+
+        bool is_good = false; 
+        int new_max = max_to_cur;
+        if(r->val >= max_to_cur) {
+            is_good = true;
+            new_max = r->val;
+        }
+
+        int leftgoods = 0, rightgoods = 0;
+        if(r->left) leftgoods = judge(r->left, new_max);
+        if(r->right) rightgoods =judge(r->right, new_max);
+
+        return leftgoods + rightgoods + is_good;
+
+    }
+    int goodNodes(TreeNode* root) {
+        return judge(root, root->val);
+    }
+};
+```
+
+### Stacks and Queues
+
 #### [232. Implement Queues using Stacks](https://leetcode.cn/problems/implement-queue-using-stacks/) (Easy)
 
 My initial shot was like this:
@@ -1562,6 +1605,81 @@ public:
 };
 ```
 
+#### [785. Is Graph Bipartite?](https://leetcode.cn/problems/is-graph-bipartite/)  (Medium)
+
+My initial solution was like this:
+
+```C++
+class Solution {
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        // coloring nodes
+        int nodes = graph.size();
+        // if(nodes % 2 == 1) return false;
+        vector<int> color(nodes, 0);
+        color[0] = 1; // color the 1st one black
+
+        for(int i = 0; i<nodes ;i++){
+            int numOfAdj = graph[i].size();  
+            for(int j = 0; j< numOfAdj; j++){ 
+                if(color[graph[i][j]]==0){   
+                    if(color[i]==1) color[graph[i][j]] = 2;
+                    else color[graph[i][j]] = 1;
+                }
+                else{
+                    if(color[graph[i][j]] == color[i]) return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+```
+
+It worked until I ran into some large samples. However, that’s not where the problem really lies.
+
+```C++
+class Solution {
+public:
+    const int UNCOLORED = 0;
+    const int RED = 1;
+    const int GREEN = 2;
+    vector<int>color;
+    bool flag;
+
+    void dfs(vector<vector<int>>& g, int v, int tocol){ // 给当前结点上色，并判断所有相邻的
+
+                color[v] = tocol;
+        int cNei = (tocol == RED ? GREEN : RED);
+        for (int neighbor: g[v]) {
+            if (color[neighbor] == UNCOLORED) {
+                dfs(g,neighbor, cNei);
+                if (!flag) {
+                    return;
+                }
+            }
+            else if (color[neighbor] != cNei) {
+                flag = false;
+                return;
+            }
+        }
+     
+    }
+    bool isBipartite(vector<vector<int>>& graph) {
+       
+        int n = graph.size();
+        flag = true;
+        color.assign(n, UNCOLORED);
+        for (int i = 0; i < n && flag; ++i) {
+            if (color[i] == UNCOLORED) {
+                dfs(graph,i, RED);
+            }
+        }
+        return flag;
+    }
+};
+```
+
 ### Heap
 
 #### [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/) (Medium)
@@ -1629,84 +1747,6 @@ public:
             }
         }
         return -1;
-    }
-};
-```
-
-
-
-#### [785. Is Graph Bipartite?](https://leetcode.cn/problems/is-graph-bipartite/)  (Medium)
-
-My initial solution was like this:
-
-```C++
-class Solution {
-public:
-    bool isBipartite(vector<vector<int>>& graph) {
-        // coloring nodes
-        int nodes = graph.size();
-        // if(nodes % 2 == 1) return false;
-        vector<int> color(nodes, 0);
-        color[0] = 1; // color the 1st one black
-
-        for(int i = 0; i<nodes ;i++){
-            int numOfAdj = graph[i].size();  
-            for(int j = 0; j< numOfAdj; j++){ 
-                if(color[graph[i][j]]==0){   
-                    if(color[i]==1) color[graph[i][j]] = 2;
-                    else color[graph[i][j]] = 1;
-                }
-                else{
-                    if(color[graph[i][j]] == color[i]) return false;
-                }
-            }
-        }
-        return true;
-    }
-};
-```
-
-It worked until I ran into some large samples. However, that’s not where the problem really lies.
-
-```C++
-
-class Solution {
-public:
-    const int UNCOLORED = 0;
-    const int RED = 1;
-    const int GREEN = 2;
-    vector<int>color;
-    bool flag;
-
-    void dfs(vector<vector<int>>& g, int v, int tocol){ // 给当前结点上色，并判断所有相邻的
-
-                color[v] = tocol;
-        int cNei = (tocol == RED ? GREEN : RED);
-        for (int neighbor: g[v]) {
-            if (color[neighbor] == UNCOLORED) {
-                dfs(g,neighbor, cNei);
-                if (!flag) {
-                    return;
-                }
-            }
-            else if (color[neighbor] != cNei) {
-                flag = false;
-                return;
-            }
-        }
-     
-    }
-    bool isBipartite(vector<vector<int>>& graph) {
-       
-        int n = graph.size();
-        flag = true;
-        color.assign(n, UNCOLORED);
-        for (int i = 0; i < n && flag; ++i) {
-            if (color[i] == UNCOLORED) {
-                dfs(graph,i, RED);
-            }
-        }
-        return flag;
     }
 };
 ```
