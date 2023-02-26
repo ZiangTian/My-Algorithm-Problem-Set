@@ -1896,3 +1896,30 @@ public:
 };
 ```
 
+### Greed
+
+#### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/)
+
+```C++
+#include<algorithm>
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        if(!s.size())return 0;
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        int appet_num = g.size(), cookie_num = s.size();
+
+        int app = 0,coo = 0; // two iterators
+        while(app < appet_num && coo < cookie_num){
+            if(s[coo] >= g[app]){
+                app++; coo++;
+            }
+            else{
+                coo++;
+            }
+        }
+        return app++;
+    }
+};
+```
