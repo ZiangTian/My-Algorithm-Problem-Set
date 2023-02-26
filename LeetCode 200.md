@@ -1680,6 +1680,91 @@ public:
 };
 ```
 
+#### [127. Word Ladder](https://leetcode.cn/problems/word-ladder/) (Hard)
+
+My initial code:
+
+```C++
+#include<queue>
+#include <vector>
+#include <algorithm>
+class Solution {
+public:
+    
+    bool isAdjacent(string s, string t){
+        int len = s.length(); if(len != t.length()) return false;
+        int dif = 0;
+        for(int i = 0; i < len; i++)
+            if(s[i]!=t[i]){
+                switch (dif){
+                    case 0: dif++; break; // 这是第一次不一样，加一
+                    case 1: return false; // 这是第二次不一样，直接返回
+                }
+            }
+        return dif==1;
+    }
+    vector<vector<int>> createAdj(vector<string>& wordList){
+        // 每个 word 都是等长的
+        int num = wordList.size(), len = wordList[0].length();
+        vector<vector<int>> adj(num, vector<int>(num, -1));
+        for(int i = 0; i < num; i++){
+            for(int j = 0; j < num; j++){
+                if(i!=j && (adj[i][j] == -1)) { // 没访问过
+                    if(isAdjacent(wordList[i], wordList[j])) adj[i][j] = adj[j][i] = 1;
+                    else adj[i][j] = adj[j][i] = 0;
+                }
+            }
+        }
+        return adj;
+    }
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+
+        vector<string> wl = wordList;
+
+        std::vector<int>::iterator it;
+        it = std::find(wl.begin(),wl.end(), endWord);
+        if(it == wl.end()) return 0;
+
+        int endInd = it - wl.begin(), beginInd, len;
+        it = std::find(wl.begin(),wl.end(), beginWord);
+
+        if(it == wl.end()){
+            wl.push_back(beginWord);
+            num = wl.size();
+            beginInd = len - 1;
+        }
+        else{
+            num = wl.size();
+            beginInd = it - wl.begin();
+        }
+
+        // 准备工作，获得了 图中 beginInd, endInd 的编号
+        vector<vector<int>> AdjG = createAdj(wl);
+
+        queue<int> ads;
+        ads.push(beginInd);
+
+        int ans = 0;
+        while(!ads.empty()){
+            int n = ads.size();
+            for(int i = 0 ; i<n; i++){
+                int curNode = ads.front(); ads.pop();
+                if(curNode == endInd) return ans;
+                for(int j = 0; j<n ; j++){
+                    if(AdjG[i][j] == 1){
+                        AdjG[i][j] = 2; // visited
+                        ads.push(j);
+                    }
+                }
+            }
+            ans++;
+        }
+        return 0;
+
+    }
+};
+```
+
 ### Heap
 
 #### [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/) (Medium)
@@ -1751,5 +1836,63 @@ public:
 };
 ```
 
-> Interlude: hasn't updated in days and will so until next week when the exams are over. Just had my data structure test today and ... although i messed up the multiple choices part where i didn't even review sparse matrices and balanced binary tree, all these leetcode problems did help me solve the algorithm problems smoothly. Funny thing is that although i have seen better solutions on leetcode, i still could only think of my initial "low efficiency" poor solutions (which will also do though). I guess some review is due after a certain while! Wish me some luck here on my DS test!
+
+
+> Interlude: hasn't updated in days and will so until next week when the exams are over. Just had my data structure test today and ... although i messed up the multiple choices part where i didn't even review sparse matrices and balanced binary tree, all these leetcode problems did help me solve the algorithm problems smoothly. Funny thing is that although i have seen better solutions on leetcode, i still could only think of my initial "low efficiency" poor solutions (which will also do though). I guess some review is due after a certain while!
+
+### Hash Map
+
+As I have little knowledge of hash maps in C++, I’ve searched up some key takeaways for reference:
+
+> Hash_map in C++: implemented using `unordered_map`, and here is some working knowledge of it:
+>
+> - create a hash map: `unordered_map<int,int> m;` 
+>
+> - add pairs: 
+>
+>   - .insert() : m.insert(pait<type_a>, <type_b>(1, 10))
+>   - directly add using array notation: m[key] = value
+>
+> - find and count:
+>
+>   - `if(m.find(key) != m.end()) return m[key];`
+>   - `return m.count(3);`
+>
+> - size and empty:
+>
+>   - `m.size()`
+>   - `m.clear()`
+>
+> - traversal:
+>
+>   - ```C++
+>     for (auto p : count) {
+>     	int front = p.first;   //key
+>         int end = p.second;   //value
+>     }
+>     ```
+>
+>   - ```C++
+>     for(auto it=m.begin();it!=m.end();it++)
+>     {
+>         int front = it->first;   //key
+>         int end = it->second;   //value
+>     }
+>     ```
+>
+
+#### [217. Contains Duplicate](https://leetcode.cn/problems/contains-duplicate/)
+
+```C++
+#include<set>
+using namespace std;
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        set<int> s;
+        for(auto i : nums) s.insert(i);
+        return !(nums.size()==s.size());
+    }
+};
+```
 
