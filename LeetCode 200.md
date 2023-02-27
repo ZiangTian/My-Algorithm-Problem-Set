@@ -1896,9 +1896,11 @@ public:
 };
 ```
 
-### Greed
+### Dynamic Planning & Greed
 
-#### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/)
+#### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/) (Easy)
+
+We attempt to satisfy child with the least appetite first, and then go up seeing how many we can satisfy at most.
 
 ```C++
 #include<algorithm>
@@ -1923,3 +1925,24 @@ public:
     }
 };
 ```
+
+#### [121. Best Time to Buy and Sell Stock](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) (Easy)
+
+Here’s a clever way to consider this problem: assume we are the one trading stocks in the case, except that we never sell but observe. On the i-th day, we have already acquired data on the previous i-1-th day, which means we have known the lowest price to date and the maximum profits we earn to date. On the i-th day, we again acquire that day’s price and update our lowest price to date, and thus updating our maximum profits to date, so that we always stay updated of the maximum profits we have had the chance to earn in the first i days (we can’t actually earn because we only observe!) 
+
+```C++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size(); if(len == 1) return 0;
+
+        int min_to_date = prices[0], max_pro = 0;
+        for(int i = 1; i< len; i++){
+            min_to_date = min_to_date < prices[i] ? min_to_date : prices[i];
+            max_pro = max_pro > (prices[i] - min_to_date) ? max_pro : (prices[i] - min_to_date);
+        }
+        return max_pro;
+    }
+};
+```
+
