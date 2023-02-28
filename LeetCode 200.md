@@ -1946,3 +1946,52 @@ public:
 };
 ```
 
+#### [435. Non-overlapping Intervals](https://leetcode.cn/problems/non-overlapping-intervals/) (Medium)
+
+I did not work this one out. My original plan was to sort the vectors based on their left limits, and use the right limit as a second key (like radix sort), but I did not implement it.
+
+In fact, the solution gives a smarter perspective, which only sorts the array with a single key:
+
+- sort the array in ascending order with the key being the right border
+- those with the smallest right border are equivalent in this problem, since the left border of the first interval does not matter. Therefore, we randomly pick one (the first one)
+- then go right until we find one whose left border are greater than the last one’s right border. This means that we have found another interval to be added. Keep doing so and we can acquire the intervals that make the final list.
+
+```C++
+ 
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        if (intervals.empty()) {
+            return 0;
+        }
+        
+        sort(intervals.begin(), intervals.end(), [](const auto& u, const auto& v) {
+            return u[1] < v[1];
+        });
+
+        int n = intervals.size();
+        int right = intervals[0][1];
+        int ans = 1;
+        for (int i = 1; i < n; ++i) {
+            if (intervals[i][0] >= right) {
+                ++ans;
+                right = intervals[i][1];
+            }
+        }
+        return n - ans;
+    }
+```
+
+> Note that vector comes with a comparison function itself. We can also write our own comparator function and pass it as a third parameter. The comparator function checks, if the statement returned, is true or false and returns a bool value which is passed to the sort function.
+>
+> ```C++
+> struct Interval {
+>     int start, end;
+> };
+> bool compareInterval(Interval i1, Interval i2)
+> {
+>     return (i1.start < i2.start);
+> }
+> 
+> vector<Interval> v { { 6, 8 }, { 1, 9 }, { 2, 4 }, { 4, 7 } };
+> sort(v.begin(), v.end(), compareInterval);
+> ```
+
