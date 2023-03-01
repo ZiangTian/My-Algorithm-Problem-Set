@@ -1995,3 +1995,37 @@ In fact, the solution gives a smarter perspective, which only sorts the array wi
 > sort(v.begin(), v.end(), compareInterval);
 > ```
 
+#### [452. Minimum Number of Arrows to Burst Balloons](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/) （Medium）
+
+Borrowing what we have learnt from the last problem, we can quickly come to a solution here.
+
+```C++
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        int len = points.size();
+        if(len == 1) return 1;
+        
+        sort(points.begin(), points.end(), [](const auto& u, const auto& v) {
+            return u[1] < v[1];
+        });
+        int curRight = points[0][1], ans = 1;
+        for(int i = 1; i < len; i++){ // 直接处理第二类气球
+            // 设 f[i]表示处理到第i个气球，需要的arrow数。从最右边开始考虑
+            // f[1] = 1
+            // 如果部分小于右端点的，那 f[i] = f[i-1]+1 
+            // 如果全都小于等于右端点，那 f[i] = f[i-1]
+            if(points[i][0] <= curRight) continue; // 都可以一起解决
+            curRight = points[i][1];
+            ans ++;
+        }
+        return ans;
+    }
+};
+```
+
+> Also, I had in mind this state transiton plan that goes like:
+>
+> - assume that f[i] represents the number of arrows needed to burst all balloons before and incl the i-th one.
+> - if none of the left bounds of the next set of balloons are greater than current right bound, then $f[i] = f[i-1] + 1$
+> - else $f[i] = f[i-1]$   
