@@ -2034,7 +2034,7 @@ At first I was somewhat misled by the hint, and had been considering how shall w
 
 Say we consider the tallest person. Then he must be at the very front of the queue since there can be no one taller than him (so his person[1] == 0). Moving on to the second tallest person. **We know for sure that there can only be two cases as to his person[1] : 1 or 0**. This gives us an important insight:
 
-**The tallest person doesn’t care his position in the queue**. In broader terms, a person only has to consider the relative positions of himself and of those who are taller than him. This leads us to **INSERT** persons into the queue, starting from the tallest.
+**The tallest person doesn’t care about his position in the queue**. In broader terms, a person only has to consider the relative positions of himself and of those who are taller than him. This leads us to **INSERT** persons into the queue, starting from the tallest.
 
 ```C++
 class Solution {
