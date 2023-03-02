@@ -2010,12 +2010,8 @@ public:
             return u[1] < v[1];
         });
         int curRight = points[0][1], ans = 1;
-        for(int i = 1; i < len; i++){ // 直接处理第二类气球
-            // 设 f[i]表示处理到第i个气球，需要的arrow数。从最右边开始考虑
-            // f[1] = 1
-            // 如果部分小于右端点的，那 f[i] = f[i-1]+1 
-            // 如果全都小于等于右端点，那 f[i] = f[i-1]
-            if(points[i][0] <= curRight) continue; // 都可以一起解决
+        for(int i = 1; i < len; i++){ 
+            if(points[i][0] <= curRight) continue; 
             curRight = points[i][1];
             ans ++;
         }
@@ -2029,3 +2025,34 @@ public:
 > - assume that f[i] represents the number of arrows needed to burst all balloons before and incl the i-th one.
 > - if none of the left bounds of the next set of balloons are greater than current right bound, then $f[i] = f[i-1] + 1$
 > - else $f[i] = f[i-1]$   
+
+#### [406. Queue Reconstruction by Height](https://leetcode.cn/problems/queue-reconstruction-by-height/) (Medium)
+
+This is an intriguing problem.
+
+At first I was somewhat misled by the hint, and had been considering how shall we arrange for the shortest people and then the taller people. Not that it’s wrong, but after thinking backwards everything clicks so quickly ---- that is, we consider **arranging for the tallest people first**.
+
+Say we consider the tallest person. Then he must be at the very front of the queue since there can be no one taller than him (so his person[1] == 0). Moving on to the second tallest person. **We know for sure that there can only be two cases as to his person[1] : 1 or 0**. This gives us an important insight:
+
+**The tallest person doesn’t care his position in the queue**. In broader terms, a person only has to consider the relative positions of himself and of those who are taller than him. This leads us to **INSERT** persons into the queue, starting from the tallest.
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        int len = people.size();  
+        if(len == 1) return people;
+
+        vector<vector<int>>qu;     
+        // sort from tallest to shortest, while putting those with a smaller pos number closer to front
+        sort(people.begin(), people.end(), [](const vector<int>& u, const vector<int>& v) {
+            return u[0] > v[0] || (u[0] == v[0] && u[1] < v[1]);
+        });
+        for(auto person : people){
+            qu.insert(qu.begin() + person[1], person);
+        }
+        return qu;    
+    }
+};
+```
+
