@@ -1946,6 +1946,35 @@ public:
 };
 ```
 
+#### [122. Best Time to Buy and Sell Stock II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/) (Medium)
+
+This one is different, yet not necessarily harder. After some thoughts we come to the conclusion that: the most profitable strategy is to sell the stocks once we observe a rise.
+
+In every loop there happen two cases：
+
+1. transaction happens. if today’s price is higher, we sell our stocks. And we **postulate** today’s price is the lowest price from now on. Record this price with `last`.
+2. transaction doesn’t happen. if today’s price is not higher, we do not sell our stocks. Note that we have formed a guess of the recent lowest price before today. So we **update** this guess by modifying `last`. (Modification of our guess does not mean that we PURCHASE the stocks.)
+
+Note that **it is only when we decide to sell our stocks that we actually purchase the “last stocks”**. This may border on the wisdom of hindsight but is a common strategy of dynamic planning.
+
+```C++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        int last = prices[0], pro = 0;
+        for(int i = 1; i < len ; i++){
+            if(prices[i]>last){  // today's price is higher, sell immediately
+                pro += prices[i] - last;
+                last = prices[i]; // can buy the stocks on the same day
+            }
+            else last = prices[i]; // today's price is lower. modify our guess and conjecture that today's price is the recent lowest
+        }
+        return pro;
+    } 
+};
+```
+
 #### [435. Non-overlapping Intervals](https://leetcode.cn/problems/non-overlapping-intervals/) (Medium)
 
 I did not work this one out. My original plan was to sort the vectors based on their left limits, and use the right limit as a second key (like radix sort), but I did not implement it.
