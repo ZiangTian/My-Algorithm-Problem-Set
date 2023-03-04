@@ -2085,3 +2085,37 @@ public:
 };
 ```
 
+#### [605. Can Place Flowers](https://leetcode.cn/problems/can-place-flowers/) （Easy）
+
+```C++
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        int len = flowerbed.size(); 
+        
+        for(int i = 0; i< len; i++){
+            
+            if(flowerbed[i] == 1){
+                i++;
+                continue;
+            }
+            else if(flowerbed[i] == 0){ 
+                if(i+1<len && flowerbed[i+1] == 0) {
+                    n--;
+                    i++;
+                    continue;
+                }
+                else if(i + 1 < len && flowerbed[i+1]== 1){
+                    i = i+2;
+                    continue;
+                }
+                else if(i + 1 >= len){
+                    n-- ; continue;
+                }
+            }
+        }
+        return n<=0;
+    }
+};
+```
+
