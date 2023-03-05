@@ -9,9 +9,7 @@ import edu.princeton.cs.algs4.StdRandom;
  * After reading all of the words, print the surviving champion.
  */
 
-// a little bit of  math problem here:
-// for i-th element, prob is 1/f(i)
-// such that 1/f(i) / (1/f[1]+1/f[2]+ ... + 1/f[n]) = 1/n
+// This one tests a bit of maths skills. Probability formulas must be used.
 
 public class RandomWord {
     public static void main(String[] args){
