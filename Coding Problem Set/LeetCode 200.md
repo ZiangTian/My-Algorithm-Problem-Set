@@ -1,5 +1,7 @@
 # LeetCode 200
 
+Interlude: An intriguing problem from [Princeton](https://coursera.cs.princeton.edu/algs4/assignments/hello/specification.php)
+
 [TOC]
 
 ## Data Structure
@@ -2115,6 +2117,34 @@ public:
             }
         }
         return n<=0;
+    }
+};
+```
+
+#### [392. Is Subsequence](https://leetcode.cn/problems/is-subsequence/) （Easy）
+
+```C++
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int lens = s.length(), lent = t.length();
+        if(lens > lent) return false;
+        if(lent == 0) return lens == 0;
+        if(lens == 0) return true;
+
+        char target = s[0];
+        int j = 0;
+
+        for(int i = 0; i < lent; i++){
+            if(t[i] == target){
+                if(j == lens - 1) return true;
+                else{
+                    j++;
+                    target = s[j];
+                }
+            }
+        }
+        return false;
     }
 };
 ```
