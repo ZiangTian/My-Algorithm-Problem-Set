@@ -2149,3 +2149,62 @@ public:
 };
 ```
 
+#### [665. Non-decreasing Array](https://leetcode.cn/problems/non-decreasing-array/) （Medium）
+
+Like many others, I naively wrote this at the first sight only to be ruthlessly failed:
+
+```python
+class Solution(object):
+    def checkPossibility(self, nums):
+        count = 0
+        N = len(nums)
+        for i in range(N):
+            if i > 0 and nums[i] < nums[i - 1]:
+                count += 1
+        return count <= 1
+```
+
+I shall not pinpoint where this goes wrong. But here’s the correct logic: **Greedy**. We are explorers exploring along the vector. We only know info about those elements we have traversed and have no idea of those we haven’t. Therefore, we gotta be super **cautious**:
+
+- We don’t want to set any element bigger, because that will make it harder for following elements to be non-decreasing.
+- So every time we encounter a *drop*, we always tend to set the left one smaller to fit the non-decreasing pattern rather than set the right one greater.
+- However, there are cases where we have no option but to set the right one greater:
+  - There is no left one. i.e, i == 0;
+  - the prior elements are already bigger than the right one. 
+- Excluding these cases, we finish our exploration
+
+```C++
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+        int len = nums.size();
+        if(len <= 2) return true;
+        int modify = 0;
+        for(int i = 0; i< len-1; i++){
+            // traverse the vector
+            if(nums[i] > nums[i+1]){
+                // a drop happens
+                if(i == 0) {
+                    nums[i] = nums[i+1];
+                    modify++;
+                    continue;
+                }    
+                
+                int pre = nums[i-1];
+                if(pre > nums[i+1]){
+                    nums[i+1] = nums[i];
+                    modify++;
+                }
+                else{
+                    nums[i] = nums[i+1];
+                    modify++;
+                }
+            }
+            
+        }
+        return modify<=1;
+         
+    }
+};
+```
+
