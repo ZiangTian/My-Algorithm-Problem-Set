@@ -2208,3 +2208,36 @@ public:
 };
 ```
 
+#### [53. Maximum Subarray](https://leetcode.cn/problems/maximum-subarray/) (Medium)
+
+> similar problems: 300 、152 
+
+This is a very classic problem. Apparently we would have to resort to dynamic planning but there’s just this very tricky uncertainty. However, by defining such uncertainty ourselves, the problem may be appear less formidable:
+
+- We are uncertain **what number is gonna make it into our final subarray**  ----> then we can get the maximum sum of all the subarrays that go through a certain element
+- However, we are uncertain **where our selected number is gonna be** in the subarray. ----> then we define our goal as to get the maximum subarray **ending with the element**.
+
+**Note that for every element, we explicitly requires it to be in the subarray.**
+
+```C++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int len = nums.size();
+        if(len <= 1) return nums[0]; 
+        vector<int> dp(len); // the arrays ending with nums[i] with the largest sum
+        dp[0] = nums[0];
+        for(int i = 1; i < len; i++){
+            if(dp[i-1]>0) dp[i] = dp[i-1]+nums[i];
+            else dp[i] = nums[i];
+        } 
+
+        int max = dp[0];
+        for(auto i : dp)
+            max = max > i ? max : i;
+        return max;
+
+    }
+};
+```
+
