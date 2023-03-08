@@ -2269,3 +2269,77 @@ public:
 
 ```
 
+#### [300. Longest Increasing Subsequence](https://leetcode.cn/problems/longest-increasing-subsequence/) （Medium）
+
+##### *Sol1: DP*
+
+Following [53. Maximum Subarray](https://leetcode.cn/problems/maximum-subarray/) , this one should’t be hard.
+
+```C++
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        // attempt 1: start, end, longest: FAILED, misread what substr means
+        // attempt 2: dp, use LoInSub[] to represent the length of longest increasing subsequence ending with i
+        int len = nums.size();
+        if(len == 1) return 1;
+        vector<int> LoInSub(len, 1);
+        for(int i = 1; i < len; i++){
+            int tmp = LoInSub[i];
+            for(int j = 1; j <= i; j++){
+                if(nums[i] > nums[i-j]){
+                    tmp = tmp > LoInSub[i-j] + 1 ? tmp : (LoInSub[i-j] + 1);
+                }
+            }
+            LoInSub[i] = tmp;
+        }
+        int maxi =LoInSub[0];
+        for(auto i : LoInSub){
+            maxi = maxi > i ? maxi : i;
+        }
+        return maxi;
+    }
+};
+```
+
+##### *Sol2: Greed + DP*
+
+Another more advanced solution: 
+
+- let an array tails such that tails[i] is the element at the tail of a subarray of length i; then tails[i] must be increasing.
+- iterate over nums:
+  - if nums[i] > tails end element, append it to tails
+  - else, replace the smallest element in tails that is bigger than nums[i] with nums[i]
+
+```C++
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int len = 1, n = (int)nums.size();
+        if (n == 0) {
+            return 0;
+        }
+        vector<int> d(n + 1, 0);
+        d[len] = nums[0];
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] > d[len]) {
+                d[++len] = nums[i];
+            } else {
+                int l = 1, r = len, pos = 0; 
+                while (l <= r) {
+                    int mid = (l + r) >> 1;
+                    if (d[mid] < nums[i]) {
+                        pos = mid;
+                        l = mid + 1;
+                    } else {
+                        r = mid - 1;
+                    }
+                }
+                d[pos + 1] = nums[i];
+            }
+        }
+        return len;
+    }
+};
+```
+
