@@ -2343,3 +2343,25 @@ public:
 };
 ```
 
+#### [152. Maximum Product Subarray](https://leetcode.cn/problems/maximum-product-subarray/) （Medium）
+
+I hit some tough patches here, but the ans is quite illuminating! Learned a lot.
+
+```C++
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int len = nums.size();
+        vector<vector<int>> HL(len, vector<int>(2));
+        HL[0][0] = nums[0]; HL[0][1] = nums[0];
+        int ans = nums[0];
+        for(int i = 1; i < len; i++){
+            HL[i][0] = min(nums[i], min(HL[i-1][0]*nums[i], HL[i-1][1]*nums[i]));
+            HL[i][1] = max(nums[i], max(HL[i-1][0]*nums[i], HL[i-1][1]*nums[i]));
+            ans = ans > HL[i][1] ? ans : HL[i][1];
+        }
+        return ans;
+    }
+};
+```
+
