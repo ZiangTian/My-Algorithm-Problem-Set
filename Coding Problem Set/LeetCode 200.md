@@ -2365,3 +2365,49 @@ public:
 };
 ```
 
+#### [198. House Robber](https://leetcode.cn/problems/house-robber/) (Medium)
+
+State transfer: ![子问题的递推关系](https://pic.leetcode-cn.com/ccceac397062b8ac6d369506f5481be5e473d4f9b35751da7861a681bbecc3e8.jpg)
+
+```java
+class Solution {
+    public int max(int x, int y){
+        return x > y ? x : y;
+    }
+   
+    public int rob(int[] nums) {
+        int len = nums.length;
+        if(len == 1) return nums[0];
+        int[] first_houses = new int[len];
+        first_houses[0] = nums[0];
+        first_houses[1] = nums[1] > nums[0] ? nums[1] : nums[0];
+        for(int i = 2; i < len; i++){
+            first_houses[i] = max(first_houses[i-1] , first_houses[i-2] + nums[i]);
+        }
+
+        return first_houses[len - 1];
+    }
+}
+```
+
+Noticing that at each iteration only the last two results were needed, we save the space by substuting two variables for the array.
+
+```C++
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int len = nums.size();
+        if(len == 1) return nums[0];
+        int k_2 = nums[0], k_1 = max(nums[0], nums[1]);
+        int cur = k_1;
+        
+        for(int i = 2; i < len; i++){
+            cur = max(k_1, k_2 + nums[i]);
+            k_2 = k_1;
+            k_1 = cur;
+        }
+        return cur;
+    }
+};
+```
+
