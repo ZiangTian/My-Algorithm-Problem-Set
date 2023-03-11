@@ -2411,3 +2411,45 @@ public:
 };
 ```
 
+#### [213. House Robber II](https://leetcode.cn/problems/house-robber-ii/) (Medium)
+
+This problem can be divided into two sub-problems:
+
+When adding the i-th house to out consideration, we have two options:
+
+- rob the i-th house, i.e., rob from 2nd house to i-th house.
+
+- rob not the i-th house, i.e., rob from 1st house to i-1 th house.
+
+and each of these two options are a linear problem we have discussed.
+
+```java
+class Solution {
+    int max(int a, int b){
+        return a > b ? a : b;
+    }
+    public int rob(int[] nums) {
+        int len = nums.length;
+        if(len == 1) return nums[0];
+        else if(len == 2)return nums[0] > nums[1] ? nums[0] : nums[1];
+
+        int[] dp1 = new int[len]; // linear problem from 0 to n-2, where dp1[i] represents max sum acquired from robbing nums[0:i-2]
+        int[] dp2 = new int[len]; // linear problem from 1 to n-1, where dp2[i] represents max sum acquired from robbing nums[1:i-1]
+
+        dp1[0] = nums[0];
+        dp1[1] = nums[0] > nums[1] ? nums[0] : nums[1];
+
+        dp2[0] = nums[1];
+        dp2[1] = nums[1] > nums[2] ? nums[1] : nums[2];
+
+        
+        for(int i = 2; i < len - 1; i++){
+            dp1[i] = max(dp1[i-2]+ nums[i], dp1[i-1]);
+            dp2[i] = max(dp2[i-1], dp2[i-2] + nums[i + 1]); 
+        }
+
+        return max(dp1[len-2], dp2[len-2]);
+    }
+}
+```
+
