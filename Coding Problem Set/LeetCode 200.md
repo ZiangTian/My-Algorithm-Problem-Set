@@ -2453,3 +2453,50 @@ class Solution {
 }
 ```
 
+#### [64. Minimum Path Sum](https://leetcode.cn/problems/minimum-path-sum/) （Easy）
+
+A basic one:
+
+```C++
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+
+        int rows = grid.size(), cols = grid[0].size();
+
+        int i, j;
+        for(i = 1; i < rows; i++)
+            grid[i][0] += grid[i-1][0];
+        for(i = 1; i < cols; i++)
+            grid[0][i] += grid[0][i-1];
+        
+        for(i = 1; i < rows; i++)
+            for(j = 1; j < cols; j++)
+                grid[i][j] = min(grid[i-1][j], grid[i][j-1]) + grid[i][j];
+        
+        return grid[rows-1][cols-1];
+    }
+};
+```
+
+#### [62. Unique Paths](https://leetcode.cn/problems/unique-paths/) （Easy）
+
+Using dp to store the original 2-dimension dp array, we have an optimized code: 
+
+```C++
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<int> dp(n,1);
+        for(int i = 1; i < m; i++){
+            int left = 1;
+            for(int j = 1; j < n; j++){
+                dp[j] = left + dp[j];
+                left = dp[j];
+            }
+        }
+        return dp[n-1];
+    }
+};
+```
+
