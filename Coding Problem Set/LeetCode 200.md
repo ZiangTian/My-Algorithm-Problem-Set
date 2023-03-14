@@ -2500,3 +2500,27 @@ public:
 };
 ```
 
+#### [303. Range Sum Query - Immutable](https://leetcode.cn/problems/range-sum-query-immutable/) (Easy)
+
+```C++
+class NumArray {
+public:
+    vector<int> obj;
+    NumArray(vector<int>& nums) {
+        int len = nums.size();
+        obj.resize(len);
+        obj[0] = nums[0];
+        for(int i = 1; i < len; i++){
+            obj[i] = obj[i-1] + nums[i];
+        }
+    }
+    
+    int sumRange(int left, int right) {
+        int l_sum, r_sum;
+        if(left == 0) l_sum = 0; else l_sum = obj[left-1];
+        if(right == 0) r_sum = obj[0]; else r_sum = obj[right];
+        return r_sum - l_sum;
+    }
+};
+```
+
