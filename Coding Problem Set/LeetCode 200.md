@@ -2524,3 +2524,34 @@ public:
 };
 ```
 
+#### [413. Arithmetic Slices](https://leetcode.cn/problems/arithmetic-slices/) （Medium）
+
+```C++
+class Solution {
+public:
+
+    int numberOfArithmeticSlices(vector<int>& nums) {
+        int len = nums.size();
+        if(len < 3) return 0;
+
+        int dif;
+        for(int i = 0; i < len - 1; i++){
+            //cur = nums[i], next = nums[i+1];
+            dif = nums[i+1] - nums[i];
+            int count = 2;
+
+            for(int j = i+1; j < len-1; j++){
+                if(nums[j + 1] - nums[j] == dif) count ++;
+                else break;
+            }
+            nums[i] = count >= 3 ? (count - 2) : 0;
+        }
+        dif = 0;
+        for(int i = 0; i < len-2; i++){
+            dif += nums[i];
+        }
+        return dif;
+    }
+};
+```
+
