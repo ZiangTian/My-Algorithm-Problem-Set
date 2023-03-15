@@ -2555,3 +2555,58 @@ public:
 };
 ```
 
+#### [343. Integer Break](https://leetcode.cn/problems/integer-break/) （Medium）
+
+##### *Sol1: Maths*
+
+To be honest  I did not think of anything other than using inequations and derivatives when solving this one. The maths is not complicated so I’ll just state the conclusion:
+
+Break the number n into threes and twos, where you want to maximize the number of threes.
+
+```python
+class Solution(object):
+    def integerBreak(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+         
+        if n == 2: return 1
+        if n == 3: return 2
+        if n == 4: return 4
+        quotient = n / 3
+        rem = n % 3
+        
+        if rem == 0: return 3**quotient
+        elif rem == 2: return (3**quotient)*2
+        else: 
+            return 3**(quotient-1) * 4
+```
+
+##### *Sol2: Dynamic planning*
+
+However, since we are here for dynamic planning, this is it:
+
+We use array dp[] to denote the answer for dp[i]. For any given number n, suppose we have had a j that’s a part of n, we have the following two schemes:
+
+- Break j. In this way we get: j * dp[i-j]
+- Do not break j. In this way we get j*(i-j)
+
+- Therefore dp[i] is simply `max(j*dp[i-j], j*(i-j))`.
+
+```java
+class Solution {
+    public int integerBreak(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            int curMax = 0;
+            for (int j = 1; j < i; j++) {
+                curMax = Math.max(curMax, Math.max(j * (i - j), j * dp[i - j]));
+            }
+            dp[i] = curMax;
+        }
+        return dp[n];
+    }
+}
+```
+
