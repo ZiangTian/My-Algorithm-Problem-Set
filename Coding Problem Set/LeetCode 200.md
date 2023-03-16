@@ -2610,3 +2610,23 @@ class Solution {
 }
 ```
 
+#### [279. Perfect Squares](https://leetcode.cn/problems/perfect-squares/) (Medium)
+
+```C++
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> dp(n+1,0);
+        dp[0] = 0;
+        for(int i = 1; i < n+1; i++){
+            int tmp = INT_MAX;
+            for(int j = 1; j*j <= i; j++){
+                tmp = min(tmp, dp[i-j*j] + 1);
+            }
+            dp[i] = tmp;
+        }
+        return dp[n];
+    }
+};
+```
+
