@@ -2630,3 +2630,57 @@ public:
 };
 ```
 
+#### [91. Decode Ways](https://leetcode.cn/problems/decode-ways/) (Medium)
+
+I went into a lotta trouble for this one. But luckily I worked it out using my initial plan.
+
+```C++
+class Solution {
+public:
+    int judge(char a){
+        if(a == '0') return 0;
+        else if(a == '1') return 1;
+        else if(a == '2') return 2;
+        else if(a >= '3' && a <= '6') return 3;
+        else if(a >= '7' && a <= '9') return 4;
+        else return 5;
+    }
+    
+    int numDecodings(string s) {
+        if(judge(s[0])==0) return 0;
+        int len = s.length();
+        vector<int> dp(len,0);
+        dp[0] = 1;
+        for(int i = 1; i < len; i++){
+            int att = judge(s[i]);
+
+            switch(judge(s[i-1])){
+                // pre == '0'
+                case 0: if(att == 0) return 0; else dp[i] = dp[i-1]; break;
+                // pre == '2'
+                case 2: if(att == 0) if(i>=2)dp[i] = dp[i-2]; else dp[i] = 1;
+                        else if(att == 4) dp[i] = dp[i-1];  
+                        else{
+                            if(i >=2)dp[i] = dp[i-1] + dp[i-2];
+                            else dp[i] = dp[i-1] + 1;
+                        }
+                        break;
+                // pre == '1'
+                case 1: if(att==0) if(i>=2)dp[i] = dp[i-2]; else dp[i] = 1;
+                        else{
+                            if(i >= 2)dp[i] = dp[i-1] + dp[i-2];
+                            else dp[i] = dp[i-1] + 1;
+                        }
+                        break;
+                default:
+                        if(att==0) return 0;
+                        else{
+                            dp[i] = dp[i-1];
+                        }      
+            }
+        }
+        return dp[len-1];
+    }
+};
+```
+
