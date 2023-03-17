@@ -2026,6 +2026,33 @@ In fact, the solution gives a smarter perspective, which only sorts the array wi
 > sort(v.begin(), v.end(), compareInterval);
 > ```
 
+#### [646. Maximum Length of Pair Chain](https://leetcode.cn/problems/maximum-length-of-pair-chain/) （Medium）
+
+A similar one:
+
+```C++
+class Solution {
+public:
+    int findLongestChain(vector<vector<int>>& pairs) {
+        int num = pairs.size();
+        if(num == 1) return 1;
+        sort(pairs.begin(), pairs.end(), [](const auto &u, const auto &v){
+            return (u[1] < v[1]) || ((u[1] == v[1]) && (u[0] < v[0]));
+        });
+        int curRight = pairs[0][1], count = 1;
+
+        for(int i = 1; i < num; i++){
+            if(pairs[i][0] > curRight){
+                count++;
+                curRight = pairs[i][1];
+            }
+        }
+        return count;
+
+    }
+};
+```
+
 #### [452. Minimum Number of Arrows to Burst Balloons](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/) （Medium）
 
 Borrowing what we have learnt from the last problem, we can quickly come to a solution here.
