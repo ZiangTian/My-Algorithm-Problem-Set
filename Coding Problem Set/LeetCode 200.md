@@ -2659,7 +2659,7 @@ public:
 
 #### [91. Decode Ways](https://leetcode.cn/problems/decode-ways/) (Medium)
 
-I went into a lotta trouble for this one. But luckily I worked it out using my initial plan.
+I went into a lotta trouble for this one. But luckily I worked it out sticking to my initial plan.
 
 ```C++
 class Solution {
@@ -2707,6 +2707,65 @@ public:
             }
         }
         return dp[len-1];
+    }
+};
+```
+
+#### [376. Wiggle Subsequence](https://leetcode.cn/problems/wiggle-subsequence/) (Medium)
+
+I had planned to only use a 1-d array, but got constantly stuck at some cases where several equal elements appear in a row.
+
+```C++
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        int len = nums.size();
+        if(len <=1 ) return len;
+
+        vector<vector<int>> dp(len, vector<int>(2,0));
+        // dp[i][0],dp[i][1] represent the longest wiggle subseq in the first i elements
+        // dp[i][0] indicates a drop at the tail
+        // dp[i][1] indicates a rise at the tail
+        dp[0][0] = dp[0][1] = 1;
+        for(int i = 1; i < len; i++){
+            if(nums[i] > nums[i-1]) {
+                dp[i][1] = dp[i-1][0] + 1;
+                dp[i][0] = dp[i-1][0];
+            }
+            else if(nums[i] < nums[i-1]) {
+                dp[i][0] = dp[i-1][1] + 1;
+                dp[i][1] = dp[i-1][1];
+            }
+            else {
+                dp[i][0] = dp[i-1][0];
+                dp[i][1] = dp[i-1][1];
+            }
+        }
+
+        return max(dp[len-1][0], dp[len-1][1]);
+    }
+};
+```
+
+This can then be optimized to be:
+
+```C++
+class Solution {
+public:
+    int wiggleMaxLength(vector<int>& nums) {
+        int len = nums.size();
+        if(len <=1 ) return len;
+
+        int high = 1, low = 1;
+        for(int i = 1; i < len; i++){
+            if(nums[i] > nums[i-1]) {
+                high = low + 1;
+            }
+            else if(nums[i] < nums[i-1]) {
+                low = high + 1;
+            }
+        }
+        return max(low, high);
     }
 };
 ```
