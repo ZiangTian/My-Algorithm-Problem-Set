@@ -2770,3 +2770,31 @@ public:
 };
 ```
 
+#### [1143. Longest Common Subsequence](https://leetcode.cn/problems/longest-common-subsequence/) (Medium)
+
+![states](https://camo.githubusercontent.com/93fb3d71386d9ba4cfd3bf2bcec90415d9f1d91286a973eff2442303853b7cf0/68747470733a2f2f63732d6e6f7465732d313235363130393739362e636f732e61702d6775616e677a686f752e6d7971636c6f75642e636f6d2f65636438396132322d633037352d343731362d383432332d6530626138393233306539612e6a7067)
+
+```C++
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int len1 = text1.length(), len2 = text2.length();
+        vector<vector<int>> dp(len1, vector<int>(len2, 0));
+        dp[0][0] = (int) (text1[0] == text2[0]);
+        for(int i = 1; i < len1; i++)
+            dp[i][0] = (int) ( (dp[i-1][0]==1) || (text1[i] == text2[0]) );
+        
+        for(int j = 1; j < len2; j++)
+            dp[0][j] = (int) ((dp[0][j-1]==1) || (text1[0] == text2[j] ));
+
+        for(int i = 1; i < len1; i++){
+            for(int j = 1; j < len2; j++){
+                if(text1[i]==text2[j]) dp[i][j] = dp[i-1][j-1] + 1;
+                else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+        return dp[len1-1][len2-1];
+    }
+};
+```
+
