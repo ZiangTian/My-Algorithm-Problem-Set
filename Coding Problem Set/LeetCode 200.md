@@ -2798,3 +2798,46 @@ public:
 };
 ```
 
+
+
+> Model: Packing. There is a backpack of volume N, and a series of things, which have two attributes: volume w and value v.
+>
+> Let `dp[i][j]` be the max value gained from the first i items that take up no more than volume j.
+> $$
+> dp[i][j] = max(dp[i-1][j], dp[i-1][j-w]+v)
+> $$
+
+#### [416. Partition Equal Subset Sum](https://leetcode.cn/problems/partition-equal-subset-sum/) (Medium)
+
+This is my first attempt into the backpack problem. It was not so pleasant.
+
+```C++
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0, len = nums.size();
+        for(auto i : nums)
+            sum += i;
+        if(sum & 1==1) return false;
+        else sum /= 2;
+
+        vector<vector<bool>> dp(len, vector<bool>(sum+1, false));
+
+        if(nums[0] <= sum) dp[0][nums[0]] = true;
+
+        for(int i = 1; i < len; i++){
+            for(int j = 0; j <= sum; j++){
+                dp[i][j] = dp[i-1][j];
+
+                if(nums[i] > j) continue;
+                else if(nums[i] == j) dp[i][j] = true;
+                else dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i]];
+            }
+        }
+                
+        return dp[len-1][sum];
+
+    }
+};
+```
+
