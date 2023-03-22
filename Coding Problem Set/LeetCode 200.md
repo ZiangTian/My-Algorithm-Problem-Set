@@ -1699,19 +1699,19 @@ public:
         for(int i = 0; i < len; i++)
             if(s[i]!=t[i]){
                 switch (dif){
-                    case 0: dif++; break; // 这是第一次不一样，加一
-                    case 1: return false; // 这是第二次不一样，直接返回
+                    case 0: dif++; break; // first difference, increment
+                    case 1: return false; // second difference, return immediately
                 }
             }
         return dif==1;
     }
     vector<vector<int>> createAdj(vector<string>& wordList){
-        // 每个 word 都是等长的
+        // equal length of every word
         int num = wordList.size(), len = wordList[0].length();
         vector<vector<int>> adj(num, vector<int>(num, -1));
         for(int i = 0; i < num; i++){
             for(int j = 0; j < num; j++){
-                if(i!=j && (adj[i][j] == -1)) { // 没访问过
+                if(i!=j && (adj[i][j] == -1)) { // hasnt visited
                     if(isAdjacent(wordList[i], wordList[j])) adj[i][j] = adj[j][i] = 1;
                     else adj[i][j] = adj[j][i] = 0;
                 }
@@ -1740,7 +1740,7 @@ public:
             beginInd = it - wl.begin();
         }
 
-        // 准备工作，获得了 图中 beginInd, endInd 的编号
+        // prep work，get indices of beginInd, endInd
         vector<vector<int>> AdjG = createAdj(wl);
 
         queue<int> ads;
