@@ -2841,6 +2841,48 @@ public:
 };
 ```
 
+#### [494. Target Sum](https://leetcode.cn/problems/target-sum/) （Medium）
+
+Following the previous problem it should not be hard to roughly conceive of the state transfer equation:
+$$
+dp[i][j] = dp[i-1][j-nums[i]] + dp[i-1][j+nums[i]];
+$$
+But this is surely incomplete.  We would have to take account of **indexing**. Relating to the representation of floating point in computers, we add a ***bias*** of sum to the indices, making the them legit. 
+
+```C++
+class Solution {
+public:
+    int findTargetSumWays(vector<int>& nums, int target) {
+    
+        // state transfer: nums[i] <= j dp[i][j] = dp[i-1][j-nums[i]] + dp[i-1][j+nums[i]];
+        // nums[i] > j dp[i][j] =  dp[i-1][j + nums[i]]
+
+        int sum = 0, len = nums.size();
+
+        for( auto i : nums)
+            sum += i;
+        if(target > sum || target < -sum) return 0;
+        int range = (sum<<1) + 1;
+        vector<vector<int>> dp(len, vector<int>(range, 0));
+        // sum of nums ranges [-sum, sum]，with a total length of 2*len+1
+        // adding a bias of sum: [0, 2*sum+1]
+
+        if(nums[0]==0) dp[0][0+sum] = 2; // note! +0, -0
+        else dp[0][nums[0] + sum] = dp[0][-nums[0] + sum] = 1;
+        
+        for(int i = 1; i < len; i++){
+            for(int j = -sum; j <= sum; j++){
+                if(j + nums[i] > sum) dp[i][j+sum] = dp[i-1][j - nums[i] + sum];
+                else if(j - nums[i] < -sum) dp[i][j+sum] = dp[i-1][j+nums[i] + sum];
+                else dp[i][j+sum] = dp[i-1][j+nums[i]+sum] + dp[i-1][j-nums[i]+sum];
+            }
+        }
+        
+        return dp[len-1][target + sum];
+        
+    }
+```
+
 
 
 ### Recursion
