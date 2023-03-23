@@ -2901,3 +2901,36 @@ public:
 };
 ```
 
+
+
+### Double pointers
+
+#### [345. Reverse Vowels of a String](https://leetcode.cn/problems/reverse-vowels-of-a-string/) (Easy)
+
+```C++
+class Solution {
+public:
+    bool isVowel(char a){
+        return (a=='a')||(a=='e')||(a=='i')||(a=='o')||(a=='u')||(a=='A')||(a=='E')||(a=='I')||(a=='O')||(a=='U');
+    }
+    string reverseVowels(string s) {
+
+        int len = s.size();
+        int front = 0, back = len - 1;
+
+        while(front < back){
+            while(front < len && !isVowel(s[front])) front++;
+            while(back >= 0 && !isVowel(s[back])) back--;
+            if(front < back) 
+            {
+                swap(s[front], s[back]);
+                front++;
+                back--;
+            }
+        }
+        return s;
+
+    }
+};
+```
+
