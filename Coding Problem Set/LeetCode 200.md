@@ -1788,6 +1788,45 @@ public:
 };
 ```
 
+#### [912. Sort an Array](https://leetcode.cn/problems/sort-an-array/) (Medium)
+
+Due to the stipulations, I chose heap sort and implemented it.
+
+```C++
+class Solution {
+public:
+    int len;
+    void siftdown(vector<int>& tree, int i, int lim){
+        // process tree[0:lim]
+        while(2*i + 1 < lim){ // if it's a leaf node 
+            int parent = i;
+            i = 2*i + 1;      
+            if(i+1 < lim){
+                i = (tree[i] > tree[i+1]) ? i : i+1;
+            } // point i to greater child node
+            if(tree[parent] < tree[i]) swap(tree[parent], tree[i]);
+            else return;
+        }
+    }
+    void makeheap(vector<int>& tree){
+        for(int i = (len - 1)/2; i >= 0; i--){
+            siftdown(tree, i, len);
+        }
+    }
+    vector<int> sortArray(vector<int>& nums) {
+        len = nums.size();
+        makeheap(nums);
+        for(int i = 0; i < len; i++){
+            swap(nums[0], nums[len-1-i]);
+            siftdown(nums, 0, len-1-i);
+        }
+        return nums;
+    }
+};
+```
+
+
+
 ### Search
 
 #### [33. Search in Rotated Sorted Array](https://leetcode.cn/problems/search-in-rotated-sorted-array/)(Medium)
