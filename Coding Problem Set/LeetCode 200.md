@@ -1928,6 +1928,33 @@ public:
 };
 ```
 
+#### [409. Longest Palindrome](https://leetcode.cn/problems/longest-palindrome/) (Easy)
+
+```C++
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        vector<int>alpha(52,0);
+        for(auto i : s){
+            if(i <='Z') alpha[i-'A']++;
+            else alpha[26+i-'a']++;
+        }
+        int res = 0, add= 0;
+        for(auto i : alpha){
+            res += (i/2)*2;
+            if(add== 0 && i%2 == 1) {
+                res ++;
+                add = 1;
+            }
+        }
+        return res;
+        
+    }
+};
+```
+
+
+
 #### [121. Best Time to Buy and Sell Stock](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/) (Easy)
 
 Here’s a clever way to consider this problem: assume we are the one trading stocks in the case, except that we never sell but observe. On the i-th day, we have already acquired data on the previous i-1-th day, which means we have known the lowest price to date and the maximum profits we earn to date. On the i-th day, we again acquire that day’s price and update our lowest price to date, and thus updating our maximum profits to date, so that we always stay updated of the maximum profits we have had the chance to earn in the first i days (we can’t actually earn because we only observe!) 
