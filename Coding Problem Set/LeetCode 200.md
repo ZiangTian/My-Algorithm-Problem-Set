@@ -1937,7 +1937,52 @@ public:
 };
 ```
 
-### Dynamic Planning & Greed
+#### [594. Longest Harmonious Subsequence](https://leetcode.cn/problems/longest-harmonious-subsequence/) (Easy)
+
+At the sight of the word subarray, I intuitively thought of dynamic planning. But minutes later I realized that was totally uncalled-for. Order does not matter here ---- We can even sort the vector if we like, and here is my initial version (which works but performs badly in both time and space).
+
+```C++
+#include<map>
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        int len = nums.size();
+        if(len == 1) return 0;
+        sort(nums.begin(), nums.end());
+
+        map<int, int> mp;
+        for(auto i : nums) mp[i]++;
+        
+        int maxl = 0;
+        for(int i = 0; i < len-1; i++)
+            if(nums[i]+1 == nums[i+1])
+                maxl = (maxl > (mp[nums[i]]+mp[nums[i+1]])) ? maxl : (mp[nums[i]]+mp[nums[i+1]]);
+        
+        return maxl;
+
+    }
+};
+```
+
+It can also be worked out using double pointers:
+
+```java
+class Solution {
+
+    public int findLHS(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length, ans = 0;
+        for (int i = 0, j = 0; j < n; j++) {
+            while (i < j && nums[j] - nums[i] > 1) i++;
+            if (nums[j] - nums[i] == 1) ans = Math.max(ans, j - i + 1);
+        }
+        return ans;
+    }
+
+}
+```
+
+### Dynamic Planning & Greedy Algorithm
 
 #### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/) (Easy)
 
