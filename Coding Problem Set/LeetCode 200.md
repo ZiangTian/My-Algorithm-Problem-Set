@@ -2994,9 +2994,29 @@ public:
     }
 ```
 
+#### [169. Majority Element](https://leetcode.cn/problems/majority-element/) (Easy)
+
+```C++
+class Solution {
+public:
+
+    int majorityElement(vector<int>& nums) {
+
+        int cnt = 0, candidate;
+        for(auto i : nums){
+            if(cnt == 0) {candidate = i; cnt = 1;}
+            else{
+                cnt += (candidate == i) ? 1 : -1;
+            }
+        }
+        return candidate;
+    }
+};
+```
 
 
-### Recursion
+
+### Recursion & Backtracking
 
 #### [326. Power of Three](https://leetcode.cn/problems/power-of-three/)（Easy）
 
@@ -3012,7 +3032,36 @@ public:
 };
 ```
 
+#### [46. Permutations](https://leetcode.cn/problems/permutations/) (Medium)
 
+There are multiple ways to implement a permutation problem, and here is one strategy:
+
+Each time we fix different elements at the very front of the queue, and recursively call on this procedure on the rest of the queue. 
+
+```C++
+class Solution {
+public:
+    int len;
+    void perm(vector<int>& nums, int m, vector<vector<int>>& ans){
+        // m stands for nums[m:]
+        if(m >= len - 1) {
+            ans.push_back(nums);
+            return;
+        }
+        for(int i = m; i < len; i++){ // in the last loop: i = len - 1
+            swap(nums[m], nums[i]); // place different elements in front in turn
+            perm(nums, m+1, ans);
+            swap(nums[m], nums[i]); // restore
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        len = nums.size();
+        vector<vector<int>> ans;
+        perm(nums, 0, ans);
+        return ans;
+    }
+};
+```
 
 ### Double pointers
 
