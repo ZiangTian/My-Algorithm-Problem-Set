@@ -1771,6 +1771,8 @@ public:
 
 #### [215. Kth Largest Element in an Array](https://leetcode.cn/problems/kth-largest-element-in-an-array/) (Medium)
 
+##### *Sol1: STL in C++*
+
 I directly used priority_queue in C++ as my heap. Should’ve written one myself but I’m busy preparing for my final these days.
 
 ```C++
@@ -1787,6 +1789,51 @@ public:
     }
 };
 ```
+
+##### *Sol2: Recursion*
+
+In my algorithm course we have learnt another more efficient way of computing this. I tried implementing it but today I do not have enough time for this. Here is a buggy code but the idea is self-explanatory:
+
+```python
+class Solution(object):
+    
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+       
+        le = len(nums)
+        k = le + 1 - k # turn into k-th smallest
+        if le < 50:
+            nums.sort()
+            return nums[k-1]  
+        
+        arrays = [nums[i:i+5] for i in range(le//5)]
+        media = []
+        for array in arrays:
+            array.sort()
+            media.append(array[2])
+        tmp = len(media)//2
+        mm = self.findKthLargest(media, tmp)
+        A1, A2, A3 = [], [], []
+        for i in nums:
+            if i == mm:
+                A2.append(i)
+            elif i < mm:
+                A1.append(i)
+            else: A3.append(i)
+        
+        if len(A1) >= k:
+            return self.findKthLargest(A1, le + 1 -k)
+        elif len(A1) + len(A2) >= k:
+            return mm
+        else: # in A3
+            return self.findKthLargest(A3, le + 1 - k - len(A1) - len(A2))
+```
+
+
 
 #### [912. Sort an Array](https://leetcode.cn/problems/sort-an-array/) (Medium)
 
@@ -3062,6 +3109,10 @@ public:
     }
 };
 ```
+
+
+
+
 
 ### Double pointers
 
