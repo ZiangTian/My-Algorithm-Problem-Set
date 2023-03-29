@@ -3165,3 +3165,13 @@ public:
 };
 ```
 
+> ***Trick with arrays*:**
+>
+> unravelling a 2D array into a 1D one can be quite convenient sometimes:
+>
+> ```C
+> for(int i = 0; i < rows * cols; i++)
+>     ele = array[i/col][i%col];
+> ```
+>
+> Such a simple notation can work wonders sometimes.
