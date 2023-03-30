@@ -3061,7 +3061,43 @@ public:
 };
 ```
 
+#### [322. Coin Change](https://leetcode.cn/problems/coin-change/) (Medium)
 
+Worked out this completely on my own. But the performance is not desirable. Still needs to be improved.
+
+```C++
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        // dp[i][j] : make amount j using coins of the first i denominations
+
+        int len = coins.size();
+        vector<vector<int>> dp(len, vector<int>(amount + 1, -1));
+
+        for(int i = 0; i <= amount; i++)
+            dp[0][i] = (i % coins[0] == 0) ? i/coins[0] : -1; 
+        // Note that we initalize dp[i][0] at 0 (NOT -1, IMPORTANT) bc we dont need any denomination to make a zero change. 
+        for(int i = 0; i < len; i++)
+            dp[i][0] = 0;
+
+        // dp[i][j] = dp[i-1][j-coins[i]] + 1, 
+        for(int i = 1; i < len; i++){
+            int new_coin = coins[i];
+            for(int j = 1; j < amount + 1; j++){
+                int n = 0, cand = INT_MAX;
+                for(; n * new_coin <= j; n++){
+                    int prev = dp[i-1][j - n*new_coin];
+                    if(prev != -1){ 
+                        cand = min(cand, prev+n);
+                    }
+                }
+                if(cand != INT_MAX) dp[i][j] = cand;                    
+            }
+        }
+        return dp[len-1][amount];
+    }
+};
+```
 
 ### Recursion & Backtracking
 
