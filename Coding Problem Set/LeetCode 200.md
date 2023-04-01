@@ -2744,7 +2744,7 @@ public:
 
 ##### *Sol1: Maths*
 
-To be honest  I did not think of anything other than using inequations and derivatives when solving this one. The maths is not complicated so I’ll just state the conclusion:
+To be honest I did not think of anything other than using inequations and derivatives when solving this one. The maths is not complicated so I’ll just state the conclusion:
 
 Break the number n into threes and twos, where you want to maximize the number of threes.
 
@@ -3211,3 +3211,44 @@ public:
 > ```
 >
 > Such a simple notation can work wonders sometimes.
+
+### Bit Operations
+
+#### [136. Single Number](https://leetcode.cn/problems/single-number/) (Easy)
+
+Try as I might, the best solution I could come up with is to sort the array, which takes time `O(nlogn)`:
+
+```C++
+class Solution {
+public:
+        int singleNumber(vector<int>& nums) {
+            sort(nums.begin(),  nums.end());
+            int len = nums.size();
+            for(int i = 0; i < len-1; i=i+2)
+                if(nums[i] != nums[i+1]) return nums[i];
+            return nums[len-1];
+        }
+};
+```
+
+Which is why it is important that we learn to use bit operations:
+
+> `xor` (exclusive or):
+>
+> 1. a^0 == a
+> 2. a^a == 0
+> 3. `xor`  is communicative and associative 
+
+```C++
+class Solution {
+public:
+        int singleNumber(vector<int>& nums) {
+            int res = 0;
+            for(auto& i : nums){
+                res ^= i;
+            }
+            return res;
+        }
+};
+```
+
