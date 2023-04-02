@@ -3252,3 +3252,41 @@ public:
 };
 ```
 
+#### [461. Hamming Distance](https://leetcode.cn/problems/hamming-distance/) (Easy)
+
+```C++
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        x ^= y; y = 0;
+        for(int i = 0; i < 32; i++){
+            y += (x&1);
+            x = (x>>1);
+        }
+        return y;
+    }
+};
+```
+
+#### [268. Missing Number](https://leetcode.cn/problems/missing-number/) (Easy)
+
+I was trying to solve this one within O(n) time complexity and O(1) space complexity.
+
+Me after ten minutes:
+
+<img src="https://i.redd.it/sgm47t82bqx61.png" style="zoom: 25%;" />
+
+```C++
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int res = 0, n = nums.size();
+        for(auto& i : nums)
+            res ^= i;
+        for(int i= 0; i <= n; i++)
+            res ^= i;
+        return res;
+    }
+};
+```
+
