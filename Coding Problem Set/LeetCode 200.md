@@ -3214,6 +3214,14 @@ public:
 
 ### Bit Operations
 
+> Some principles:
+>
+> ```C
+> x ^ 0s = x      x & 0s = 0      x | 0s = x
+> x ^ 1s = ~x     x & 1s = x      x | 1s = 1s
+> x ^ x = 0       x & x = x       x | x = x
+> ```
+
 #### [136. Single Number](https://leetcode.cn/problems/single-number/) (Easy)
 
 Try as I might, the best solution I could come up with is to sort the array, which takes time `O(nlogn)`:
@@ -3286,6 +3294,33 @@ public:
         for(int i= 0; i <= n; i++)
             res ^= i;
         return res;
+    }
+};
+```
+
+#### [260. Single Number III](https://leetcode.cn/problems/single-number-iii/) (Medium)
+
+This one's pretty tricky. We first figure out a method to divide the numbers into two components, in each of which there is only a single single number.
+
+```C++
+class Solution {
+public:
+
+    vector<int> singleNumber(vector<int>& nums) {
+        long long bar = 0;
+        int x = 0, y = 0;
+        for(auto& i : nums)
+            bar ^= i;
+        // Since there are two single numbers, bar != 0
+        // use bar to divide the numbers into 2 categories
+        // find the lowest different bit of these two numbers ---- that is
+        // the lowest 1 here
+        bar = bar & (-bar);
+        for(auto &i : nums){
+            if(i & bar) x ^= i;
+            else y ^= i;
+        }
+        return {x, y};
     }
 };
 ```
