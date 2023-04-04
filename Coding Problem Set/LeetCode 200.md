@@ -3364,3 +3364,30 @@ public:
 };
 ```
 
+#### [693. Binary Number with Alternating Bits](https://leetcode.cn/problems/binary-number-with-alternating-bits/) (Easy)
+
+```C++
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        n = (unsigned) n;
+        unsigned all_ones = n^(n>>1);
+        return !(all_ones & (all_ones+1));
+    }
+};
+```
+
+#### [476. Number Complement](https://leetcode.cn/problems/number-complement/) (Easy)
+
+```C++
+class Solution {
+public:
+    int findComplement(int num) {
+        unsigned mask = (1 << 31);
+        while((mask & num)==0) mask = (mask >>1);
+        mask = (mask << 1) - 1;
+        return num ^ mask;
+    }
+};
+```
+
