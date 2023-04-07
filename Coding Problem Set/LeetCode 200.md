@@ -3409,3 +3409,40 @@ public:
 };
 ```
 
+
+
+#### [318. Maximum Product of Word Lengths](https://leetcode.cn/problems/maximum-product-of-word-lengths/) (Medium)
+
+This one is intriguing: using an int to store information of a string. Some preliminary idea would be to traverse all possible pairs in the vector, examine whether they have common characters, and then update the answer. Surely enough we need to resort to extra space to speed our crude version up.
+
+We use an int to describe the occurrences of characters in a string. Strings that share no common characters give a product of 0 after and operation.
+
+```C++
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+
+        int len = words.size();
+        vector<int> desc(len, 0);
+        for(int i = 0; i < len; i++){
+            for(auto c : words[i]){
+                desc[i] |= (1<<(c-'a'));
+            }
+        }
+
+        int ans = 0, len1, len2;
+        for(int i = 0; i < len; i++){
+            len1 = words[i].length();
+            for(int j = i+1; j < len; j++){
+                if((desc[i] & desc[j])==0){
+                    len2 = words[j].length();
+                    ans = max(ans, len1 * len2);
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
