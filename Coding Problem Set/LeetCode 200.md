@@ -3446,3 +3446,36 @@ public:
 };
 ```
 
+#### [338. Counting Bits](https://leetcode.cn/problems/counting-bits/) (Easy)
+
+```C++
+class Solution {
+public:
+    const int mask0 = 0x55555555;
+    const int mask1 = 0x33333333;
+    const int mask2 = 0x0f0f0f0f;
+    const int mask3 = 0x00ff00ff;
+    const int mask4 = 0x0000ffff;
+    int res1, res2, res3, res4, res5;
+
+    int numofones(int number){
+
+        res1 = (number&mask0)+ ((number>>1)&mask0);
+        res2 = (res1 & mask1) + ((res1 >> 2) & mask1);
+        res3 = (res2 & mask2) + ((res2 >> 4) & mask2);
+        res4 = (res3 & mask3) + ((res3 >> 8) & mask3);
+        res5 = (res4 & mask4) + ((res4 >> 16) & mask4);
+
+        return res5;
+
+    }
+    vector<int> countBits(int n) {
+        vector<int> res;
+        for(int i = 0; i <= n; i++){
+            res.push_back(numofones(i));
+        }
+        return res;
+    }
+};
+```
+
