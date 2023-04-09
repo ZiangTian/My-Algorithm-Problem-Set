@@ -3099,6 +3099,77 @@ public:
 };
 ```
 
+#### [474. Ones and Zeroes](https://leetcode.cn/problems/ones-and-zeroes/) (Medium)
+
+Unoptimized code:
+
+```C++
+class Solution {
+public:
+    int len;
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        len = strs.size();
+        vector<vector<int>> att(len, vector<int>(2,0));
+        for(int i = 0; i < len; i++){
+            for(auto j : strs[i]){
+                att[i][j - '0']++;
+            }
+        }
+
+        vector<vector<vector<int>>>dp(len + 1,vector<vector<int>>(m+1,vector<int>(n+1,0)));
+        for(int i = 1; i <= len; i++){
+            int zeroes = att[i-1][0], ones = att[i-1][1];
+            for(int j = 0; j < m+1; j++){
+                for(int k = 0; k < n+1; k++){
+                    dp[i][j][k] = dp[i-1][j][k];
+                    if(zeroes <= j && ones <= k){
+                        dp[i][j][k] = max(dp[i][j][k], dp[i-1][j-zeroes][k-ones] + 1);
+                    }
+                }
+            }
+        }
+
+        return dp[len][m][n];
+    }
+};
+```
+
+Spatially optimized code:
+
+```C++
+class Solution {
+public:
+
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        int len = strs.size();
+        vector<vector<int>> att(len, vector<int>(2,0));
+        for(int i = 0; i < len; i++){
+            for(auto j : strs[i]){
+                att[i][j - '0']++;
+            }
+        }
+
+        //vector<vector<vector<int>>>dp(len + 1,vector<vector<int>>(m+1,vector<int>(n+1,0)));
+        vector<vector<int>>dp(m+1,vector<int>(n+1,0));
+
+        for(int i = 1; i <= len; i++){
+            int zeroes = att[i-1][0], ones = att[i-1][1];
+            for(int j = m; j >= 0; j--){
+                for(int k = n; k >= 0; k--){
+                    if(zeroes <= j && ones <= k){
+                        dp[j][k] = max(dp[j][k], dp[j-zeroes][k-ones] + 1);
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+};
+```
+
+A common practice is to eliminate a dimension of array, and traverse the remaining dimension in reverse order.
+
 ### Recursion & Backtracking
 
 #### [326. Power of Three](https://leetcode.cn/problems/power-of-three/)（Easy）
@@ -3478,4 +3549,3 @@ public:
     }
 };
 ```
-
