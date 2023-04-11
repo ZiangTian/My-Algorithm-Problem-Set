@@ -3170,6 +3170,64 @@ public:
 
 A common practice is to eliminate a dimension of array, and traverse the remaining dimension in reverse order.
 
+#### [583. Delete Operation for Two Strings](https://leetcode.cn/problems/delete-operation-for-two-strings/) （Medium）
+
+```C++
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        // longest sub array
+        // dp[i][j] 
+        int len1= word1.length(), len2 = word2.length();
+        vector<vector<int>> dp(len1, vector<int>(len2, 0));
+        dp[0][0] = (word1[0]==word2[0]);
+        for(int i = 1; i < len1; i++)
+            dp[i][0] = (dp[i-1][0] || (word1[i]==word2[0]));
+        for(int i = 1; i < len2; i++)
+            dp[0][i] = (dp[0][i-1] || (word2[i]==word1[0]));
+        
+        for(int i = 1; i < len1; i++ ){
+            for(int j = 1; j < len2; j++){
+                dp[i][j] = (word1[i]==word2[j]) ? (dp[i-1][j-1]+1) : max(dp[i-1][j], dp[i][j-1]);
+            }
+        } 
+
+        return (len1 - dp[len1-1][len2-1]) + (len2 - dp[len1-1][len2-1]) ;
+          
+    }
+};
+
+```
+
+Optimized code:(tricky. Took me hours to get it right)
+
+```java
+class Solution {
+    public int minDistance(String word1, String word2) {
+
+       int[] dp = new int[word2.length() + 1];
+       for (int j = 0; j <= word2.length(); j++) {
+           dp[j] = 0;
+       }
+       for (int i = 0; i < word1.length(); i++) {
+           for (int j = 0, prev = dp[0]; j < word2.length(); j++) {
+               int t = dp[j + 1];
+               if (word1.charAt(i) == word2.charAt(j)) {
+                   dp[j + 1] = prev + 1;
+               } else {
+                   dp[j + 1] = Math.max(dp[j + 1], dp[j]) ;
+               }
+               prev = t;
+           }
+       }
+       return (word2.length() - dp[word2.length()]) + (word1.length() - dp[word2.length()]);
+
+    }
+}
+```
+
+
+
 ### Recursion & Backtracking
 
 #### [326. Power of Three](https://leetcode.cn/problems/power-of-three/)（Easy）
