@@ -3099,6 +3099,60 @@ public:
 };
 ```
 
+#### [518. Coin Change II](https://leetcode.cn/problems/coin-change-ii/) (Medium)
+
+Following [coin change](https://leetcode.cn/problems/coin-change/),I used a two-d array to solve this one, only to be greeted by the dismal result of surpassing 5% and 11% percent of users in terms of time and space...
+
+```C++
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+
+        int len = coins.size();
+        vector<vector<int>> dp(len, vector<int>(amount+1, 0));
+        
+        for(int j = 0; j <= amount; j++){
+            dp[0][j] = (j%coins[0]==0);
+        }
+        for(int i = 0; i < len; i++){ 
+            dp[i][0] = 1;
+        }
+
+        for(int i  = 1; i < len; i++){
+            for(int j  = 1; j <= amount; j++){
+                int cur = 0;
+                int newdeno = coins[i];
+                for(int k = 0; k * newdeno <= j; k++)
+                    cur += dp[i-1][j-k*newdeno];
+                dp[i][j] = cur;
+            }
+        }        
+
+        return dp[len-1][amount];
+    }
+};
+```
+
+But there exists an easy analogy between this and [70.climbing stairs](https://leetcode-cn.com/problems/climbing-stairs/)
+
+Inspired, we consider the increasing possibilities as we take a new denomination:
+
+```C++
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+        vector<int> dp(amount+1, 0);
+        dp[0] =1;
+        for(auto coin : coins){
+            for(int i = coin; i <= amount; i++)
+                // if i < coin, there can't be any new ways provided by current coin
+                dp[i]+=dp[i-coin];
+        }
+        return dp[amount];
+    }
+};
+```
+
 #### [474. Ones and Zeroes](https://leetcode.cn/problems/ones-and-zeroes/) (Medium)
 
 Unoptimized code:
