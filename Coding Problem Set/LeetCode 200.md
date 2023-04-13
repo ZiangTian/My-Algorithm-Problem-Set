@@ -3280,6 +3280,41 @@ class Solution {
 }
 ```
 
+#### [139. Word Break](https://leetcode.cn/problems/word-break/) (Medium)
+
+Didn't solve it. Been getting scanty sleep lately.
+
+```C++
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> wordset;
+
+        for(auto word: wordDict)
+            wordset.insert(word);
+        int len = s.length();
+        vector<int> dp(len+ 1);
+
+        dp[0] = true;
+
+        for(int i  = 1; i <= len; i++){
+            for(int j = 0; j < i; j++){
+                if(
+                    dp[j] // if s[0..j] is breakable 
+                    && (wordset.find(s.substr(j, i-j)) != wordset.end())  // if the rest of the string can be found in wordset
+                  ){
+                      dp[i] = true;
+                      break;
+                  }
+            }
+        }
+
+        return dp[len];
+
+    }
+};
+```
+
 
 
 ### Recursion & Backtracking
