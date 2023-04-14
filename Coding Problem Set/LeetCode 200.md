@@ -3315,6 +3315,41 @@ public:
 };
 ```
 
+#### [377. Combination Sum IV](https://leetcode.cn/problems/combination-sum-iv/) (Medium)
+
+This is a sequential knapsack problem, which share some characteristics with climbing stairs. Things are quite different here.
+
+First, instead of defining `dp[i][j]` as the ways to make value `j` from the first `i` elements, **we define it as ways to make value from an arrangement of length  `i`** . Accordingly, to take account of the sequential order here, we consider different cases of the last element in the arrangement sequence, `num`. `num` can be whatever in the `nums` that is smaller than `j`. Hence, we have:
+
+`dp[i][j] += dp[i-1][j-num];`
+
+take a moment to absorb this, while bearing in mind that `i` stands for the length of the arrangement.
+
+```C++
+typedef unsigned long long ull;
+
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        // an upgrade from 318.coin change II
+        ull res = 0;
+        vector<vector<ull>> dp(target + 1, vector<ull>(target+1,0));
+        dp[0][0] = 1;
+
+        for(ull i = 1; i <= target; i++){ // NOTE!! it's target here.
+            for(ull j = 0; j <= target; j++){
+                for(auto num : nums){
+                    if(num <= j) dp[i][j] += dp[i-1][j-num];
+                }
+            }
+            res += dp[i][target];
+        }
+
+        return res;
+    }
+};
+```
+
 
 
 ### Recursion & Backtracking
