@@ -3731,3 +3731,30 @@ public:
     }
 };
 ```
+
+### Math
+
+#### [172. Factorial Trailing Zeroes](https://leetcode.cn/problems/factorial-trailing-zeroes/) (Medium)
+
+Some examples are self-explanatory:
+
+`20! = ...*5*...10*...15*...20`
+
+`25! = ...*5*...10*...15*...*20*...*25 = ...*5*...10*...15*...*20*...*(5*5)`
+
+```C++
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        // denifitely impossible to calculate the factorial directly
+        // a trailing zero comes from 2*5. We only need to calculate how many 5 there is since twos outnumber fives
+        int res = 0;
+        while(n > 0){
+            n /= 5; // how many 5 there is
+            res += n;
+        }
+        return res;
+    }
+};
+```
+
