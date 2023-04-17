@@ -3777,3 +3777,24 @@ public:
 };
 ```
 
+#### [645. Set Mismatch](https://leetcode.cn/problems/set-mismatch/) (Easy)
+
+```C++
+class Solution {
+public:
+    vector<int> findErrorNums(vector<int>& nums) {
+        int len = nums.size();
+        vector<int>map(len,0); // map[i] 记录 i 出现的次数
+        for(auto i : nums){
+            map[i-1]++;
+        }
+        vector<int> res(2,0);
+        for(int i = 0; i < len; i++){
+            if(map[i] == 2) res[0] = i+1;
+            else if(map[i] == 0) res[1] = i+1;
+        }
+        return res;
+    }
+};
+```
+
