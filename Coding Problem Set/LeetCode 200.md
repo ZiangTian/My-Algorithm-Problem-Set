@@ -3784,7 +3784,7 @@ class Solution {
 public:
     vector<int> findErrorNums(vector<int>& nums) {
         int len = nums.size();
-        vector<int>map(len,0); // map[i] 记录 i 出现的次数
+        vector<int>map(len,0); // map[i] is the occurrences of i
         for(auto i : nums){
             map[i-1]++;
         }
