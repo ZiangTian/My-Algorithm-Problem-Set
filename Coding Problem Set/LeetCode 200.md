@@ -3784,7 +3784,7 @@ class Solution {
 public:
     vector<int> findErrorNums(vector<int>& nums) {
         int len = nums.size();
-        vector<int>map(len,0); // map[i] is the occurrences of i
+        vector<int>map(len,0); // map[i] is the occurences of i
         for(auto i : nums){
             map[i-1]++;
         }
@@ -3794,6 +3794,62 @@ public:
             else if(map[i] == 0) res[1] = i+1;
         }
         return res;
+    }
+};
+```
+
+
+
+There are two misconceptions that can be perfectly debunked by two test cases.
+
+- If we have registered a map from i to j, then next time we encounter i , we only have to check if it still maps to j.
+  - Debunk case: `"badc" "baba"`, where each char in s maps well to t but it's not the other way around.
+- If we have encountered a map from i to j, we should register the map as map[i] = j and map[j] = i.
+  - Debunk case: `"paper" "title"`
+
+Therefore, we have:
+
+```C++
+class Solution {
+public:
+    bool ok(string s, string t){
+        unordered_map<char, char> map;
+        int i = 0, len = s.length();
+        for(i; i < len; i++){
+            if(map.find(s[i]) == map.end()){
+                // there hasn't been this char
+                map[s[i]] = t[i];
+            }
+            else{
+                if(map[s[i]] != t[i]) return false;
+            }
+        }
+        return true;
+    }
+    bool isIsomorphic(string s, string t) {
+        return ok(s, t) && ok(t, s);
+    }
+};
+```
+
+The official solution though, gives this:
+
+```C++
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        unordered_map<char, char> s2t;
+        unordered_map<char, char> t2s;
+        int len = s.length();
+        for (int i = 0; i < len; ++i) {
+            char x = s[i], y = t[i];
+            if ((s2t.count(x) && s2t[x] != y) || (t2s.count(y) && t2s[y] != x)) {
+                return false;
+            }
+            s2t[x] = y;
+            t2s[y] = x;
+        }
+        return true;
     }
 };
 ```
