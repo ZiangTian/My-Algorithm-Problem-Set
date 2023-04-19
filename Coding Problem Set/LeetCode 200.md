@@ -3350,6 +3350,56 @@ public:
 };
 ```
 
+#### [309. Best Time to Buy and Sell Stock with Cooldown](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-cooldown/) (Medium)
+
+I attempted to use a recursive divide-and-conquer algorithm to solve this one,but it failed:
+
+```C++
+class Solution {
+public:
+    int mp(vector<int>& p, int start, int end){
+        if((end - start < 1) || (end >= p.size())) return 0;
+        if(end - start == 1) return max(p[end] - p[start], 0); 
+
+        int res = 0;
+        for(int i = start+1; i <= end-2; i++){
+            res = max(res, mp(p, start, i) + mp(p, i+2, end));
+        }
+
+        return res;
+    }
+    int maxProfit(vector<int>& prices) {
+        return mp(prices, 0, prices.size() - 1);
+    }
+};
+```
+
+The solution is still about dynamic planning:
+
+```C++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (prices.empty()) {
+            return 0;
+        }
+
+        int n = prices.size();
+        // dp[i][0]: most income of the first i days when holding stocks on i-th day
+        // dp[i][1]: most income of the first i days when not holding stocks on i-th day on cooldown
+        // dp[i][2]: most income of the first i days when not holding stocks on i-th day and not on cooldown
+        vector<vector<int>> dp(n, vector<int>(3));
+        dp[0][0] = -prices[0];
+        for (int i = 1; i < n; ++i) {
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][2] - prices[i]);
+            dp[i][1] = dp[i - 1][0] + prices[i];
+            dp[i][2] = max(dp[i - 1][1], dp[i - 1][2]);
+        }
+        return max(dp[n - 1][1], dp[n - 1][2]);
+    }
+};
+```
+
 
 
 ### Recursion & Backtracking
