@@ -3400,6 +3400,33 @@ public:
 };
 ```
 
+#### [650. 2 Keys Keyboard](https://leetcode.cn/problems/2-keys-keyboard/) (Medium)
+
+Let `dp[i]` be the min number of operations needed to print i A's. To do this, we must have j A's first, to which we copy once and paste `i/j` times, where i is multiple of j.
+
+Thus we have: `dp[i]=min(dp[i/j]+j) for j that divides i `
+
+```C++
+class Solution {
+public:
+    int minSteps(int n) {
+        vector<int> dp(n+1, 0);
+        for(int i = 2; i <= n; i++){
+            dp[i] = INT_MAX;
+            for(int j = 1; j*j <= i; j++){
+                if(i%j == 0) {
+                    dp[i] = min(dp[i], dp[j] + i/j); 
+                    dp[i] = min(dp[i], dp[i/j] + j);
+                }
+            }
+        }
+        return dp[n];
+
+    }
+};
+
+```
+
 
 
 ### Recursion & Backtracking
