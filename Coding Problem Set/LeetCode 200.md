@@ -2,8 +2,6 @@
 
 Interlude: An intriguing problem from [Princeton](https://coursera.cs.princeton.edu/algs4/assignments/hello/specification.php)
 
-[TOC]
-
 ## Data Structure
 
 ### Linked List
