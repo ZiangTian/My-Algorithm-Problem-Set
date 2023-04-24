@@ -25,7 +25,7 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 
 #### 206 Reverse Linked List (Easy)
 
-Recursive solution: This requires us to  write the exit at the top of the entry. Bear in mind that head, after the function, should be at the end of the list, pointing to nullptr.
+Recursive solution: This requires us to  write the exit at the top of the entry. Bear in mind that head, after the function, should be at the end of the list, pointing to NULL.
 
 The function can roughly be divided into 4 steps:
 
