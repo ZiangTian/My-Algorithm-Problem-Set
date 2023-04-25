@@ -2,6 +2,8 @@
 
 Interlude: An intriguing problem from [Princeton](https://coursera.cs.princeton.edu/algs4/assignments/hello/specification.php)
 
+[TOC]
+
 ## Data Structure
 
 ### Linked List
@@ -25,7 +27,7 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
 
 #### 206 Reverse Linked List (Easy)
 
-Recursive solution: This requires us to  write the exit at the top of the entry. Bear in mind that head, after the function, should be at the end of the list, pointing to NULL.
+Recursive solution: This requires us to  write the exit at the top of the entry. Bear in mind that head, after the function, should be at the end of the list, pointing to nullptr.
 
 The function can roughly be divided into 4 steps:
 
@@ -2057,34 +2059,6 @@ public:
 };
 ```
 
-#### [118. Pascal's Triangle](https://leetcode.cn/problems/pascals-triangle/) (Easy)
-
-```C++
-class Solution {
-public:
-vector<vector<int>> generate(int numRows) {
-        vector<vector<int>> res;
-        for(int i = 0; i < numRows; i++){
-            // generate the (i+1)th level of Pascal's triangle
-            vector<int> tmp(i+1, 1);
-            if(i == 0) {
-                res.push_back(tmp);
-                continue;
-            };
-
-            for(int j = 0; j < i-1; j++){
-                // the previous level has i elements
-                tmp[j+1] = res[i-1][j] + res[i-1][j+1];
-            }
-
-            res.push_back(tmp);
-        }
-        return res;
-    }
-}
-```
-
-
 #### [409. Longest Palindrome](https://leetcode.cn/problems/longest-palindrome/) (Easy)
 
 ```C++
@@ -3953,6 +3927,24 @@ public:
             t2s[y] = x;
         }
         return true;
+    }
+};
+```
+
+#### [389. Find the Difference](https://leetcode.cn/problems/find-the-difference/) (Easy)
+
+```C++
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        int res = 0;
+        for(auto i : s){
+            res ^= (i - 'a');
+        }
+        for(auto i : t){
+            res ^= (i - 'a');
+        }
+        return char(res + 'a');
     }
 };
 ```
