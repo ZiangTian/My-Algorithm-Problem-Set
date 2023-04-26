@@ -3542,6 +3542,33 @@ public:
 >
 > Such a simple notation can work wonders sometimes.
 
+#### [524. Longest Word in Dictionary through Deleting](https://leetcode.cn/problems/longest-word-in-dictionary-through-deleting/) (Medium)
+
+```C++
+class Solution {
+public:
+
+    string findLongestWord(string s, vector<string>& dictionary) {
+        sort(dictionary.begin(), dictionary.end(), [](const auto& u, const auto& v) {
+            return (u.length() > v.length()) || ((u.length() == v.length()) && (u < v));
+        });
+        int lens = s.length(), lent = 0, i, j;
+        for(auto str : dictionary){
+            lent = str.length();
+            i = 0; j = 0;
+            while(i < lens && j < lent){
+                if(s[i] == str[j]) j++;
+                i++;
+            }
+            if(j == lent) return str;
+        }
+        return "";
+    }
+};
+```
+
+
+
 ### Bit Operations
 
 > Some principles:
