@@ -2029,6 +2029,50 @@ class Solution {
 }
 ```
 
+#### [290. Word Pattern](https://leetcode.cn/problems/word-pattern/) (Easy)
+
+```C++
+class Solution {
+public:
+    
+    bool wordPattern(string pattern, string s) {
+        unordered_map<char, string> dic;
+        unordered_map<string, char> cid;
+        vector<string> con;
+        int j = 0, len = s.length();
+        for(int i = 0; i < len; i++){
+            if(s[i]==' '){
+                con.push_back(s.substr(j, i-j));
+                j = i+1;
+            }
+            if (i == len - 1) {
+            con.push_back(s.substr(j, i + 1 - j));
+            }
+        }
+        len = pattern.length();
+        if(len != con.size()) return false;
+        
+        for(j = 0; j < len; j++){
+            if((dic.find(pattern[j])==dic.end()) && (cid.find(con[j]) ==  cid.end())){
+                // if there haven't been a 'a' in the pattern
+                // But no other pattern[j] should pair with this string
+
+                dic[pattern[j]] = con[j];
+                cid[con[j]] = pattern[j];
+            }
+            else if((dic.find(pattern[j])!=dic.end()) && (cid.find(con[j]) != cid.end())){
+                if(dic[pattern[j]] != con[j] || cid[con[j]] != pattern[j]) return false;
+            }
+            else return false;
+        }
+        return true;
+
+    }
+};
+```
+
+
+
 ### Dynamic Planning & Greedy Algorithm
 
 #### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/) (Easy)
