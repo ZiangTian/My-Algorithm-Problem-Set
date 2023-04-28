@@ -2100,6 +2100,54 @@ public:
 };
 ```
 
+#### [1262. Greatest Sum Divisible by Three](https://leetcode.cn/problems/greatest-sum-divisible-by-three/) （Medium）
+
+Some guys solved this one using dynamic planning. Very clever.  But it's one a.m. so I'm using one bulky greedy algo code here just to go to sleep asap.
+
+```C++
+class Solution {
+public:
+    int maxSumDivThree(vector<int>& nums) {
+        int sum = 0;
+
+        vector<int>threeones;
+        vector<int>threetwos;
+        for(auto& i : nums){
+            sum += i;
+            switch(i%3){
+                case 1: threeones.push_back(i); break;
+                case 2: threetwos.push_back(i); break;
+            }
+        }
+        if(sum%3 == 0) return sum;
+        sort(threeones.begin(), threeones.end());
+        sort(threetwos.begin(), threetwos.end());
+
+        if(sum%3 == 1){ // need to subtract 1 from the sum 
+            if(threeones.size()==0){
+                // subtract two smallest among threetwos
+                if(threetwos.size()<2) return 0;
+                else return sum - threetwos[0]-threetwos[1];
+            }
+            else{
+                if(threetwos.size()<2) return sum - threeones[0];
+                else return max(sum - threetwos[0]-threetwos[1],sum - threeones[0] );
+            }
+        }
+        else{ // need to subtract 2 from the sum 
+            if(threetwos.size()==0) {
+                if(threeones.size()<2) return 0;
+                else return sum - threeones[0] - threeones[1];
+            }
+            else{
+                if(threeones.size()<2) return sum - threetwos[0];
+                else return max(sum - threetwos[0], sum - threeones[0] - threeones[1]);
+            }
+        }
+    }
+};
+```
+
 
 
 #### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/) (Easy)
