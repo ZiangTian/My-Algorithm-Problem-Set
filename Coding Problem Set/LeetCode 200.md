@@ -2075,6 +2075,33 @@ public:
 
 ### Dynamic Planning & Greedy Algorithm
 
+#### [11. Container With Most Water](https://leetcode.cn/problems/container-with-most-water/) (Medium)
+
+Use double pointers. We start out from both sides, and each time the limiting factor is the shorter side. In order to contain more water, we attempt to make that side longer by moving it closer to the middle. 
+
+```C++
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int j = height.size()-1, i = 0;
+        int res = (j-i) *(min(height[i], height[j]));
+        while(i < j){
+            if(height[j] > height[i]){
+                res = max(res, (j-i)*height[i]);
+                i++;
+            }
+            else {
+                res = max(res, (j-i)*height[j]);
+                j--;
+            }
+        }
+        return res;
+    }
+};
+```
+
+
+
 #### [455. Assign Cookies](https://leetcode.cn/problems/assign-cookies/) (Easy)
 
 We attempt to satisfy child with the least appetite first, and then go up seeing how many we can satisfy at most.
