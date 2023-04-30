@@ -3776,7 +3776,7 @@ public:
 
 #### [260. Single Number III](https://leetcode.cn/problems/single-number-iii/) (Medium)
 
-This one's pretty tricky. We first figure out a method to divide the numbers into two components, in each of which there is only a single single number.
+This one is pretty tricky. We first figure out a method to divide the numbers into two components, in each of which there is only a single single number.
 
 ```C++
 class Solution {
