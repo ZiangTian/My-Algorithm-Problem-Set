@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "e:/CODING/My-Algorithm-Problem-Set/Luogu",
-      "program": "e:/CODING/My-Algorithm-Problem-Set/Luogu/build/Debug/outDebug",
+      "cwd": "e:/CODING/My-Algorithm-Problem-Set/OJs",
+      "program": "e:/CODING/My-Algorithm-Problem-Set/OJs/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
